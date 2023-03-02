@@ -87,11 +87,11 @@ def main() -> None:
     if sigma_y>0:
         images, _ = samples(fmodel,dataset=path_genuine_blur,batchsize=total,shape=(256,256)) # required shape by DDRM
         print("**********************denoising genuine images...******************************")
-        processed_images = ddrm(images,sigma_0=sigma_y,batch=batch_deno) # IWMF-Diff
+        images = ddrm(images,sigma_0=sigma_y,batch=batch_deno) # IWMF-Diff
         path_genuine_deno = os.path.join(outputs_path, 'genuine_deno')
         if not os.path.exists(path_genuine_deno):
             os.makedirs(path_genuine_deno)
-        save_all_images(processed_images,subject,sample,path_genuine_deno)
+        save_all_images(images,subject,sample,path_genuine_deno)
         images, _ = samples(fmodel,dataset=path_genuine_deno,batchsize=total,shape=shape)   
     genuine_features = fmodel(images)
     
@@ -106,11 +106,11 @@ def main() -> None:
     if sigma_y>0:
         images, _ = samples(fmodel,dataset=path_adv_blur,batchsize=total,shape=(256,256)) # required shape by DDRM
         print("**********************denoising genuine images...******************************")
-        processed_images = ddrm(images,sigma_0=sigma_y,batch=batch_deno) # IWMF-Diff
+        images = ddrm(images,sigma_0=sigma_y,batch=batch_deno) # IWMF-Diff
         path_adv_deno = os.path.join(outputs_path, 'adv_deno')
         if not os.path.exists(path_adv_deno):
             os.makedirs(path_adv_deno)
-        save_all_images(processed_images,subject,sample,path_adv_deno)
+        save_all_images(images,subject,sample,path_adv_deno)
         images, _ = samples(fmodel,dataset=path_adv_deno,batchsize=total,shape=shape)   
     adv_features = fmodel(images)
     del images
@@ -125,7 +125,6 @@ def main() -> None:
     FRR_genuine = {frr}\n\
     FRR_adv = {frr_adv}\n")
     f.write(f"********************************END********************************\n\n")
-    del genuine_features, adv_features, threshold, far_attack, frr, frr_adv
 
     f.close()
 
