@@ -11,7 +11,7 @@ Iterative window mean filter (IWMF) is a novel and super efficient non-deep-lear
 ****
 ## Contents
 * [Introduction](#Introduction)
-* [Main requirements](#Main-requirements)
+* [Main Requirements](#Main-Requirements)
 * [Installation](#Installation)
 * [Data Preparation](#Data-Preparation)
 * [Pretrained Models](#Pretrained-Models)
