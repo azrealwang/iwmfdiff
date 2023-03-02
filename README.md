@@ -57,7 +57,7 @@ The procedure of IWMF defending the authentication system is as follows:
 ## Results
 
 ## Citation
-This work under review by [ACM CCS 2023](https://www.sigsac.org/ccs/CCS2023/).
+This work is under review by [ACM CCS 2023](https://www.sigsac.org/ccs/CCS2023/).
 
 ## Acknowledgement
 This implementation is based on / inspired by:
