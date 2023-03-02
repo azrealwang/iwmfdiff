@@ -4,7 +4,7 @@ import argparse
 from facenet_pytorch import InceptionResnetV1
 from insightface.iresnet import iresnet100
 from iwmfdiff.models import PyTorchModel
-from iwmfdiff.utils import samples, iwmf, save_all_images, ddrm, false_rate, FMR
+from iwmfdiff.utils import samples, save_all_images, iwmf, ddrm, false_rate, FMR
 
 
 def parse_args_and_config():
@@ -12,7 +12,7 @@ def parse_args_and_config():
     parser.add_argument('--sample', help='how many images from each subject', type=int, default=10)
     parser.add_argument('--subject', help='how many subjects', type=int, default=2)
     parser.add_argument('--dfr_model', help='deep learning models', type=str, default='insightface',choices=['insightface', 'facenet'])
-    parser.add_argument('--lambda_0', help='window amount in [0,1]; 0 indicates no blurring', type=float, default=0.25)
+    parser.add_argument('--lambda_0', help='window amount >0; 0 indicates no blurring', type=float, default=0.25)
     parser.add_argument('--sigma_y', help='Gaussian standard deviation in [0,1]; -1 indicates no denoising', type=float, default=0.15)
     parser.add_argument('--s', help='window size (px)', type=int, default=3)
     parser.add_argument('--batch_deno', help='batch size for ddrm processing; depend on memory', type=int, default=1)
@@ -38,13 +38,14 @@ def main() -> None:
     log_name = args.log_name
     logs_path = args.logs_path
     outputs_path = args.outputs_path
+    del args
     
     ## Start logging
     if not os.path.exists(logs_path):
         os.makedirs(logs_path)
     f = codecs.open(f'{logs_path}/{log_name}.txt','a', 'utf-8')
-    f.write(f'********************************START********************************\n\
-********Settings********\n\
+    f.write(f'********************************START********************************\n')
+    f.write(f'********Settings********\n\
     sample = {sample}\n\
     subject = {subject}\n\
     deep face model = {dfr_model}\n\
@@ -105,7 +106,7 @@ def main() -> None:
         save_all_images(images,subject,sample,path_adv_blur)
     if sigma_y>0:
         images, _ = samples(fmodel,dataset=path_adv_blur,batchsize=total,shape=(256,256)) # required shape by DDRM
-        print("**********************denoising genuine images...******************************")
+        print("**********************denoising adv images...******************************")
         images = ddrm(images,sigma_0=sigma_y,batch=batch_deno) # IWMF-Diff
         path_adv_deno = os.path.join(outputs_path, 'adv_deno')
         if not os.path.exists(path_adv_deno):
@@ -113,7 +114,7 @@ def main() -> None:
         save_all_images(images,subject,sample,path_adv_deno)
         images, _ = samples(fmodel,dataset=path_adv_deno,batchsize=total,shape=shape)   
     adv_features = fmodel(images)
-    del images
+    del images, fmodel
     
     ## Score
     far_attack, _ = FMR(adv_features,target_features,threshold,sample) # attack success rate
