@@ -33,7 +33,7 @@ The procedure of IWMF defending the authentication system is as follows:
 <img src="figures/pipeline.jpg" alt="pipeline" style="width:500px;"/>
 
 
-## Main requirements
+## Main Requirements
 
   * **torch == 1.1.0**
   * **torchvision == 0.3.0**
