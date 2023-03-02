@@ -1,3 +1,7 @@
 # iwmfdiff
 
-haha
+facenet
+pytorch
+eagerpy
+numpy?
+yaml
