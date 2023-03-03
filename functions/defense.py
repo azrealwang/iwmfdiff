@@ -1,187 +1,33 @@
-from typing import Optional, Tuple, Any
-import eagerpy as ep
-import warnings
 import os
 import numpy as np
 import math
 import torch
 import yaml
-from torch.nn import CosineSimilarity
 from torch import Tensor
-from .types import Bounds
-from .models import Model
-from torchvision.utils import save_image
-from PIL import Image
+from .utils import imgs_resize, save_all_images
 
-from ddrm.functions.denoising import efficient_generalized_steps, get_beta_schedule, dict2namespace
-from ddrm.functions.ckpt_util import get_ckpt_path, download
-from ddrm.models import diffusion
-from ddrm.guided_diffusion.script_util import create_model
+from .ddrm.functions.denoising import efficient_generalized_steps, get_beta_schedule, dict2namespace
+from .ddrm.functions.ckpt_util import get_ckpt_path, download
+from .ddrm.models import diffusion
+from .ddrm.guided_diffusion.script_util import create_model
 
-def samples(
-    fmodel: Model,
-    dataset: str = "lfw",
-    index: int = 0,
-    batchsize: int = 1,
-    data_format: Optional[str] = None,
-    bounds: Optional[Bounds] = None,
-    shape: Optional[Tuple[int, int]] = None,
-) -> Any:
-    if hasattr(fmodel, "data_format"):
-        if data_format is None:
-            data_format = fmodel.data_format  # type: ignore
-        elif data_format != fmodel.data_format:  # type: ignore
-            raise ValueError(
-                f"data_format ({data_format}) does not match model.data_format ({fmodel.data_format})"  # type: ignore
-            )
-    elif data_format is None:
-        raise ValueError(
-            "data_format could not be inferred, please specify it explicitly"
-        )
-
-    if bounds is None:
-        bounds = fmodel.bounds
-
-    images, labels = _samples(
-        dataset=dataset,
-        index=index,
-        batchsize=batchsize,
-        data_format=data_format,
-        bounds=bounds,
-        shape=shape,
-    )
-    
-    if hasattr(fmodel, "dummy") and fmodel.dummy is not None:  # type: ignore
-        images = ep.from_numpy(fmodel.dummy, images).raw  # type: ignore
-        labels = ep.from_numpy(fmodel.dummy, labels).raw  # type: ignore
-    else:
-        warnings.warn(f"unknown model type {type(fmodel)}, returning NumPy arrays")
-    return images, labels
-
-
-def _samples(
-    dataset: str,
-    index: int,
-    batchsize: int,
-    data_format: str,
-    bounds: Bounds,
-    shape: Tuple[int, int],
-) -> Tuple[Any, Any]:   
-
-    images, labels = [], []
-    basepath = r""
-    samplepath = os.path.join(basepath, f"{dataset}")
-    files = os.listdir(samplepath)
-    for idx in range(index, index + batchsize):
-        i = idx
-
-        # get filename and label
-        file = [n for n in files if f"{i:05d}_" in n][0]
-        label = int(file.split(".")[0].split("_")[-1])
-
-        # open file
-        path = os.path.join(samplepath, file)
-        image = Image.open(path)
-        
-        # if model_type == "insightface" or model_type == "CurricularFace":
-        #     image = image.resize((112, 112))
-        if shape is not None:
-            image = image.resize(shape)
-        
-        image = np.asarray(image, dtype=np.float32)
-
-        if image.ndim == 2:
-            image = image[..., np.newaxis]
-
-        assert image.ndim == 3
-
-        if data_format == "channels_first":
-            image = np.transpose(image, (2, 0, 1))
-        
-        images.append(image)
-        labels.append(label)
-    
-    images_ = np.stack(images)
-    labels_ = np.array(labels)
-
-    if bounds != (0, 255):
-        images_ = images_ / 255 * (bounds[1] - bounds[0]) + bounds[0]
-    return images_, labels_
-
-def cos_similarity_score(featuresA: Tensor, featuresB: Tensor) -> Tensor:
+def iwmfdiff(
+        imgs_input: Tensor,
+        lambda_0: float,
+        sigma_y: float,
+        s: int = 3,
+        batch: int = 1,
+        ) -> Tensor:
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    cos = CosineSimilarity(dim=1,eps=1e-6)
-    featuresA = featuresA.to(device)
-    featuresB = featuresB.to(device)
-    similarity = (cos(featuresA,featuresB)+1)/2
-    del featuresA, featuresB
-    return similarity
-
-def false_rate(
-    featuresA: Tensor, 
-    labelsA: Tensor, 
-    featuresB: Tensor, 
-    lablesB: Tensor,
-    thresh: float,
-) -> Tuple[Any, Any]:
-    geniue_indexA = list()
-    geniue_indexB = list()
-    imposter_indexA = list()
-    imposter_indexB = list()
-    for i in range(labelsA.shape[0]):
-        for j in range(lablesB.shape[0]):
-            if labelsA[i]==lablesB[j]:
-                geniue_indexA.extend([i])
-                geniue_indexB.extend([j])
-            else:
-                imposter_indexA.extend([i])
-                imposter_indexB.extend([j])
-    geniue_score = cos_similarity_score(featuresA[geniue_indexA],featuresB[geniue_indexB])
-    imposter_score = cos_similarity_score(featuresA[imposter_indexA],featuresB[imposter_indexB])
-    frr = -1
-    if len(geniue_score)>0:
-        frr = float(torch.Tensor.float(geniue_score < thresh).mean())
-    far = -1
-    if len(imposter_score)>0:
-        far = float(torch.Tensor.float(imposter_score >= thresh).mean())
-    return far, frr
+    _,_,h,w = imgs_input.shape
+    imgs = iwmf(imgs_input,lambda_0,s)
+    if sigma_y>0:
+        print("**********************denoising images******************************")
+        imgs = imgs_resize(imgs,(256,256))
+        imgs = ddrm(imgs,batch=batch,sigma_0=sigma_y)
+        imgs = Tensor(imgs_resize(imgs,(h,w))).to(device)
     
-def save_all_images(
-        imgs: Any,
-        subject: int,
-        samplesize: int,
-        output_path: str
-        ) -> None:
-    for i in range(subject):
-        for j in range(samplesize):
-            save_image(imgs[i*samplesize+j], f'{output_path}/%05d_%d.png'%(i*samplesize+j,i))
-
-def FMR(
-    advs: Tensor, 
-    targets: Tensor, 
-    thresh: float,
-    samplesize: int,
-) -> Tuple[Any, Any]:
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    imposter_score_target = cos_similarity_score(advs,targets)
-    imposter_score_renew = Tensor([]).to(device)
-    totalsize = np.int(targets.shape[0])
-    for i in range(samplesize):
-        index_i = list(range(0+i,totalsize,samplesize))
-        for j in range(samplesize): 
-            if i!=j:
-                index_j = list(range(0+j,totalsize,samplesize))
-                similarity_tmp = cos_similarity_score(advs[index_i],targets[index_j])
-                imposter_score_renew = torch.cat((imposter_score_renew,similarity_tmp),0)
-    fmr_target = -1
-    if len(imposter_score_target)>0:
-        fmr_target = np.float32(imposter_score_target.cpu() >= thresh).mean()
-    fmr_renew = -1
-    if len(imposter_score_renew)>0:
-        fmr_renew = np.float32(imposter_score_renew.cpu() >= thresh).mean()
-    del imposter_score_target, imposter_score_renew
-
-    return fmr_target, fmr_renew
+    return imgs
 
 def iwmf(
         img_input: Tensor,
@@ -287,10 +133,10 @@ def ddrm(
         H_funcs = None
         if deg[:2] == 'cs':
             compress_by = int(deg[2:])
-            from ddrm.functions.svd_replacement import WalshHadamardCS
+            from .ddrm.functions.svd_replacement import WalshHadamardCS
             H_funcs = WalshHadamardCS(config.data.channels, config.data.image_size, compress_by, torch.randperm(config.data.image_size**2, device=device), device)
         elif deg[:3] == 'inp':
-            from ddrm.functions.svd_replacement import Inpainting
+            from .ddrm.functions.svd_replacement import Inpainting
             if deg == 'inp_lolcat':
                 loaded = np.load("inp_masks/lolcat_extra.npy")
                 mask = torch.from_numpy(loaded).to(device).reshape(-1)
@@ -306,11 +152,11 @@ def ddrm(
             missing = torch.cat([missing_r, missing_g, missing_b], dim=0)
             H_funcs = Inpainting(config.data.channels, config.data.image_size, missing, device)
         elif deg == 'deno':
-            from ddrm.functions.svd_replacement import Denoising
+            from .ddrm.functions.svd_replacement import Denoising
             H_funcs = Denoising(config.data.channels, config.data.image_size, device)
         elif deg[:10] == 'sr_bicubic':
             factor = int(deg[10:])
-            from ddrm.functions.svd_replacement import SRConv
+            from .ddrm.functions.svd_replacement import SRConv
             def bicubic_kernel(x, a=-0.5):
                 if abs(x) <= 1:
                     return (a + 2)*abs(x)**3 - (a + 3)*abs(x)**2 + 1
@@ -327,16 +173,16 @@ def ddrm(
             H_funcs = SRConv(kernel / kernel.sum(), \
                              config.data.channels, config.data.image_size, device, stride = factor)
         elif deg == 'deblur_uni':
-            from ddrm.functions.svd_replacement import Deblurring
+            from .ddrm.functions.svd_replacement import Deblurring
             H_funcs = Deblurring(torch.Tensor([1/9] * 9).to(device), config.data.channels, config.data.image_size, device)
         elif deg == 'deblur_gauss':
-            from ddrm.functions.svd_replacement import Deblurring
+            from .ddrm.functions.svd_replacement import Deblurring
             sigma = 10
             pdf = lambda x: torch.exp(torch.Tensor([-0.5 * (x/sigma)**2]))
             kernel = torch.Tensor([pdf(-2), pdf(-1), pdf(0), pdf(1), pdf(2)]).to(device)
             H_funcs = Deblurring(kernel / kernel.sum(), config.data.channels, config.data.image_size, device)
         elif deg == 'deblur_aniso':
-            from ddrm.functions.svd_replacement import Deblurring2D
+            from .ddrm.functions.svd_replacement import Deblurring2D
             sigma = 20
             pdf = lambda x: torch.exp(torch.Tensor([-0.5 * (x/sigma)**2]))
             kernel2 = torch.Tensor([pdf(-4), pdf(-3), pdf(-2), pdf(-1), pdf(0), pdf(1), pdf(2), pdf(3), pdf(4)]).to(device)
@@ -346,10 +192,10 @@ def ddrm(
             H_funcs = Deblurring2D(kernel1 / kernel1.sum(), kernel2 / kernel2.sum(), config.data.channels, config.data.image_size, device)
         elif deg[:2] == 'sr':
             blur_by = int(deg[2:])
-            from ddrm.functions.svd_replacement import SuperResolution
+            from .ddrm.functions.svd_replacement import SuperResolution
             H_funcs = SuperResolution(config.data.channels, config.data.image_size, blur_by, device)
         elif deg == 'color':
-            from ddrm.functions.svd_replacement import Colorization
+            from .ddrm.functions.svd_replacement import Colorization
             H_funcs = Colorization(config.data.image_size, device)
         else:
             print("ERROR: degradation type not supported")
