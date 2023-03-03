@@ -10,7 +10,6 @@ from functions.defense import iwmfdiff
 
 def parse_args_and_config():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dfr_model', help='deep learning models', type=str, default='insightface')
     parser.add_argument('--lambda_0', help='window amount >0; 0 indicates no blurring', type=float, default=0.25)
     parser.add_argument('--sigma_y', help='Gaussian standard deviation in [0,1]; -1 indicates no denoising', type=float, default=0.15)
     parser.add_argument('--s', help='window size (px)', type=int, default=3)
@@ -26,7 +25,6 @@ def parse_args_and_config():
 def main() -> None:
     ## Settings
     args = parse_args_and_config()
-    dfr_model = args.dfr_model
     threshold = args.thresh
     lambda_0 = args.lambda_0
     s = args.s
@@ -43,7 +41,6 @@ def main() -> None:
     f = codecs.open(f'{logs_path}/{log_name}.txt','a', 'utf-8')
     f.write(f'********************************START********************************\n')
     f.write(f'********Settings********\n\
-    deep face model = {dfr_model}\n\
     threshold = {threshold}\n\
     window amount lambda = {lambda_0}\n\
     window size s = {s}px\n\
