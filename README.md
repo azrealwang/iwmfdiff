@@ -44,12 +44,12 @@ The procedure of IWMF defending the authentication system is as follows:
   tqdm (4.64.1)
   * **torch == 1.1.0**
   * **torchvision == 0.3.0**
-  * **tensorboardX == 1.7**
-  * **bcolz == 1.2.1**
-  * **Python 3**
+
 
 ## Installation
 * git clone https://github.com/azrealwang/iwmfdiff.git
+* pip3 install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu116
+* pip3 install torch torchvision
 * pip3 install -r requirements.txt
 
 

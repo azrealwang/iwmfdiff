@@ -1,7 +1,7 @@
+# This is a demo of defending Insightface
 import codecs
 import os
 import argparse
-#from facenet_pytorch import InceptionResnetV1
 from functions.insightface.iresnet import iresnet100
 from functions.models import PyTorchModel
 from functions.utils import samples, save_all_images, false_rate, FMR
@@ -10,7 +10,7 @@ from functions.defense import iwmfdiff
 
 def parse_args_and_config():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dfr_model', help='deep learning models', type=str, default='insightface',choices=['insightface', 'facenet'])
+    parser.add_argument('--dfr_model', help='deep learning models', type=str, default='insightface')
     parser.add_argument('--lambda_0', help='window amount >0; 0 indicates no blurring', type=float, default=0.25)
     parser.add_argument('--sigma_y', help='Gaussian standard deviation in [0,1]; -1 indicates no denoising', type=float, default=0.15)
     parser.add_argument('--s', help='window size (px)', type=int, default=3)
@@ -50,14 +50,8 @@ def main() -> None:
     Gaussian standard deviation sigma_y = {sigma_y}\n')
     
     ## Load Model
-    if dfr_model == 'insightface':
-        model = iresnet100(pretrained=True).eval()
-        shape = (112,112) # resize images
-    elif dfr_model == 'facenet':
-#        model = InceptionResnetV1(pretrained='vggface2').eval()
-        shape = (160,160) # resize images
-    else:
-        raise ValueError("unsupported model")
+    model = iresnet100(pretrained=True).eval()
+    shape = (112,112) # resize images
     mean = [0.5] * 3
     std = [0.5] * 3
     preprocessing = dict(mean=mean,std=std,axis=-3)

@@ -1,4 +1,3 @@
-facenet-pytorch
 eagerpy
 PyYAML
 tqdm
