@@ -8,7 +8,6 @@ Iterative window mean filter (IWMF) is a novel and super efficient non-deep-lear
 
 <img src="figures/samples.jpg" alt="samples" style="width:400px;"/>
 
-
 ****
 ## Contents
 * [Introduction](#Introduction)
@@ -24,7 +23,6 @@ Iterative window mean filter (IWMF) is a novel and super efficient non-deep-lear
 
 ****
 
-
 ## Introduction
 The procedure of IWMF defending the authentication system is as follows:
 * Step 1: Blur the input image by IWMF. Perturbations on adversarial examples are largely removed, yet facial features are partially distorted.
@@ -33,7 +31,6 @@ The procedure of IWMF defending the authentication system is as follows:
 * Step 4: Verify the pre-processed image by a regular authentication system. Note that users do not need to re-enroll due to the defense.
 
 <img src="figures/pipeline.jpg" alt="pipeline" style="width:500px;"/>
-
 
 ## Main Requirements
 
@@ -46,28 +43,22 @@ The procedure of IWMF defending the authentication system is as follows:
   
   The versions in `()` have been tested.
 
-
 ## Installation
-
 ```
 git clone https://github.com/azrealwang/iwmfdiff.git
 cd iwmfdiff
 pip3 install -r requirements.txt
 ```
-
 if equipped with GPU:
 
 ```
 pip3 install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu116
 ```
-
 or:
 
 ```
 pip3 install torch torchvision
 ```
-
-
 ## Data Preparation
 
 
@@ -77,18 +68,32 @@ pip3 install torch torchvision
 [Google Drive](https://drive.google.com/file/d/1ulkO2GFepl1IRlPjMRS_vsaVq5wG0p_x/view?usp=share_link)
 
 ## Usage
+### Demos of defending Insightface
+Without defense: `lambda=0` and `sigma_y=-1`
 
 ```
 python main.py --lambda_0=0 --sigma_y=-1 --batch_deno=10 --thresh=0.6131 --log_name="noDefense"
 ```
+IWMF: `lambda>0` and `sigma_y=-1`
 
 ```
 python main.py --lambda_0=0.4 --sigma_y=-1 --batch_deno=10 --thresh=0.6611 --log_name="IWMF"
 ```
+IWMF-Diff: `lambda>0` and `sigma_y>0`
 
 ```
 python main.py --lambda_0=0.25 --sigma_y=0.15 --batch_deno=10 --thresh=0.6351 --log_name="IWMFDiff"
 ```
+where the following are options:
+- `lambda_0` is the window amount; `0` indicates no blurring. (default: `0.25`)
+- `sigma_y` is the Gaussian standard deviation in [0,1]; `-1` indicates no denoising. (default: `0.15`)
+- `s` is the window size (px). (default: `3`)
+- `batch_deno` is the batch size for ddrm processing, depending on memory. (default: `1`)
+- `thresh` is the system threshold. (default: `0.6351`)
+- `log_name` is the log file name. (default: `"IWMFDiff"`)
+- `logs_path` is the path of log files. (default: `logs`)
+- `logs_path` is the path of output images; the processed adversarial examples are in the folder `adv/` and genuine images are in the folder `genuine/`. (default: `outputs`)
+
 
 ### Can directly use
 
