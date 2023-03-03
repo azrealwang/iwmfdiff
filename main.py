@@ -1,7 +1,7 @@
 import codecs
 import os
 import argparse
-from facenet_pytorch import InceptionResnetV1
+#from facenet_pytorch import InceptionResnetV1
 from functions.insightface.iresnet import iresnet100
 from functions.models import PyTorchModel
 from functions.utils import samples, save_all_images, false_rate, FMR
@@ -54,7 +54,7 @@ def main() -> None:
         model = iresnet100(pretrained=True).eval()
         shape = (112,112) # resize images
     elif dfr_model == 'facenet':
-        model = InceptionResnetV1(pretrained='vggface2').eval()
+#        model = InceptionResnetV1(pretrained='vggface2').eval()
         shape = (160,160) # resize images
     else:
         raise ValueError("unsupported model")

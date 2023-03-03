@@ -34,17 +34,24 @@ The procedure of IWMF defending the authentication system is as follows:
 
 
 ## Main Requirements
-  * **Python (3.9.13, 3.11.2)**
+(tested version)
+
+  * **Python (3.9.13)**
+  * **facenet-pytorch (2.5.2)**
+  
+  eagerpy (0.30.0)
+  PyYAML (6.0)
+  tqdm (4.64.1)
   * **torch == 1.1.0**
   * **torchvision == 0.3.0**
   * **tensorboardX == 1.7**
   * **bcolz == 1.2.1**
   * **Python 3**
 
-
 ## Installation
 * git clone https://github.com/azrealwang/iwmfdiff.git
 * pip3 install -r requirements.txt
+
 
 
 ## Data Preparation
