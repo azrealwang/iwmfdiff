@@ -34,7 +34,7 @@ The procedure of IWMF defending the authentication system is as follows:
 
 
 ## Main Requirements
-
+  * **Python (3.9.13, 3.11.2)**
   * **torch == 1.1.0**
   * **torchvision == 0.3.0**
   * **tensorboardX == 1.7**
