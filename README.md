@@ -8,6 +8,7 @@ Iterative window mean filter (IWMF) is a novel and super efficient non-deep-lear
 
 <img src="figures/samples.jpg" alt="samples" style="width:400px;"/>
 
+
 ****
 ## Contents
 * [Introduction](#Introduction)
@@ -23,6 +24,7 @@ Iterative window mean filter (IWMF) is a novel and super efficient non-deep-lear
 
 ****
 
+
 ## Introduction
 The procedure of IWMF defending the authentication system is as follows:
 * Step 1: Blur the input image by IWMF. Perturbations on adversarial examples are largely removed, yet facial features are partially distorted.
@@ -34,34 +36,74 @@ The procedure of IWMF defending the authentication system is as follows:
 
 
 ## Main Requirements
-(tested version)
 
   * **Python (3.9.13)**
-  * **facenet-pytorch (2.5.2)**
+  * **torch (1.13.1+cu116)**
+  * **torchvision (0.14.1+cu116)**
+  * **eagerpy (0.30.0)**
+  * **PyYAML (6.0)**
+  * **tqdm (4.64.1)**
   
-  eagerpy (0.30.0)
-  PyYAML (6.0)
-  tqdm (4.64.1)
-  * **torch == 1.1.0**
-  * **torchvision == 0.3.0**
+  The versions in `()` have been tested.
 
 
 ## Installation
-* git clone https://github.com/azrealwang/iwmfdiff.git
-* pip3 install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu116
-* pip3 install torch torchvision
-* pip3 install -r requirements.txt
 
+```
+git clone https://github.com/azrealwang/iwmfdiff.git
+cd iwmfdiff
+pip3 install -r requirements.txt
+```
+
+if equipped with GPU:
+
+```
+pip3 install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu116
+```
+
+or:
+
+```
+pip3 install torch torchvision
+```
 
 
 ## Data Preparation
 
 
+
 ## Pretrained Model
+
+[Google Drive](https://drive.google.com/file/d/1ulkO2GFepl1IRlPjMRS_vsaVq5wG0p_x/view?usp=share_link)
 
 ## Usage
 
+```
+python main.py --lambda_0=0 --sigma_y=-1 --batch_deno=10 --thresh=0.6131 --log_name="noDefense"
+```
+
+```
+python main.py --lambda_0=0.4 --sigma_y=-1 --batch_deno=10 --thresh=0.6611 --log_name="IWMF"
+```
+
+```
+python main.py --lambda_0=0.25 --sigma_y=0.15 --batch_deno=10 --thresh=0.6351 --log_name="IWMFDiff"
+```
+
+### Can directly use
+
+```
+from iwmfdiff.fuctions.defense import iwmfdiff
+```
+
 ## Results
+
+The results of the released pretrained model are as follows:
+|Data| LFW | CFP-FP | CPLFW | AGEDB | CALFW | IJBB (TPR@FAR=1e-4) | IJBC (TPR@FAR=1e-4) |
+|:---:|:----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+| Result | 99.80 | 98.36 | 93.13 | 98.37 | 96.05 | 94.86 | 96.15 ||
+
+The results are slightly different from the results in the paper because we replaced DataParallel with DistributedDataParallel and retrained the model.
 
 ## Citation
 This work is under review by [ACM CCS 2023](https://www.sigsac.org/ccs/CCS2023/).
@@ -77,46 +119,3 @@ If you have any questions about our work, please do not hesitate to contact us b
 
 Hanrui Wang: hanrui.wang@monash.edu
 
-## Usage
-```bash
-# To train the model:
-sh train.sh
-# To evaluate the model:
-(1)please first download the val data in https://github.com/ZhaoJ9014/face.evoLVe.PyTorch.
-(2)set the checkpoint dir in config.py
-sh evaluate.sh
-```
-You can change the experimental setting by simply modifying the parameter in the config.py
-
-## Model
-The IR101 pretrained model can be downloaded here. 
-[Baidu Cloud](link: https://pan.baidu.com/s/1bu-uocgSyFHf5pOPShhTyA 
-passwd: 5qa0), 
-[Google Drive](https://drive.google.com/open?id=1upOyrPzZ5OI3p6WkA5D5JFYCeiZuaPcp)
-
-## Result
-The results of the released pretrained model are as follows:
-|Data| LFW | CFP-FP | CPLFW | AGEDB | CALFW | IJBB (TPR@FAR=1e-4) | IJBC (TPR@FAR=1e-4) |
-|:---:|:----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
-| Result | 99.80 | 98.36 | 93.13 | 98.37 | 96.05 | 94.86 | 96.15 ||
-
-The results are slightly different from the results in the paper because we replaced DataParallel with DistributedDataParallel and retrained the model.
-
-
-
-
-
-
-# iwmfdiff
-
-facenet
-pytorch
-eagerpy
-numpy?
-yaml
-
-python main.py --dfr_model="insightface" --lambda_0=0 --sigma_y=-1 --batch_deno=10 --thresh=0.6131 --log_name="insightface-noDefense"
-
-python main.py --dfr_model="insightface" --lambda_0=0.4 --sigma_y=-1 --batch_deno=10 --thresh=0.6611 --log_name="insightface-IWMF"
-
-python main.py --dfr_model="insightface" --lambda_0=0.25 --sigma_y=0.15 --batch_deno=10 --thresh=0.6351 --log_name="insightface-IWMFDiff"
