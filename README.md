@@ -168,7 +168,7 @@ def iwmfdiff(
 ## Results
 
 ### Attack success rate / False acceptance rate (%)
-*The security $`FAR_{attack}`$ is improved.
+*The security $FAR_{attack}$ is improved.
 
 | Defense | $FAR_{SGADV}$ (seen) | $FAR_{FGSM}$ | $FAR_{PGD}$ | $FAR_{CW}$ | $FAR_{DI^2-FGSM}$ | $FAR_{TI-FGSM}$ | $FAR_{LGC}$ | $FAR_{BIM}$ |
 |:---:|:----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
@@ -177,8 +177,8 @@ def iwmfdiff(
 | IWMF-Diff | 3.2 | 15.6 | 0.8 | 0.2 | 28.53 | 33.00 | 23.97 | 10.87 |
 
 ### Authentication accuracy / False rejection rate (%)
-* The authentication accuracy `$FRR_{genuine}$` is preserved.
-* The robustness of classifying adversarial examples as their true labels `$FRR_{attack}$` is improved.
+* The authentication accuracy $FRR_{genuine}$ is preserved.
+* The robustness of classifying adversarial examples as their true labels $FRR_{attack}$ is improved.
 
 | Defense | $FRR_{genuine}$ | $FRR_{SGADV}$ (seen) | $FRR_{FGSM}$ | $FRR_{PGD}$ | $FRR_{CW}$ |
 |:---:|:----:|:-----:|:-----:|:-----:|:-----:|
