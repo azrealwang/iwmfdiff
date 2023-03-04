@@ -168,6 +168,7 @@ def iwmfdiff(
 ## Results
 
 * Attack success rate/false acceptance rate (%)
+
 | Defense | $FAR_{SGADV}$ (seen) | $FAR_{FGSM}$ | $FAR_{PGD}$ | $FAR_{CW}$ | $FAR_{DI^2-FGSM}$ | $FAR_{TI-FGSM}$ | $FAR_{LGC}$ | $FAR_{BIM}$ |
 |:---:|:----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 | Insightface | 100.0 | 100.0 | 100.0 | 100.0 | 95.00 | 93.17 | 93.73 | 91.50 |
@@ -175,6 +176,7 @@ def iwmfdiff(
 | IWMF-Diff | 3.2 | 15.6 | 0.8 | 0.2 | 28.53 | 33.00 | 23.97 | 10.87 |
 
 * Authentication accuracy/false rejection rate (%)
+
 | Defense | $FRR_{genuine}$ | $FRR_{SGADV}$ (seen) | $FRR_{FGSM}$ | $FRR_{PGD}$ | $FRR_{CW}$ |
 |:---:|:----:|:-----:|:-----:|:-----:|:-----:|
 | Insightface | 0.28 | 98.30 | 6.34 | 51.92 | 42.12 |
