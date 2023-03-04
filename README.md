@@ -118,9 +118,9 @@ inputs
 
 ## Pretrained Model
 
-* InsightFace: iresnet100 pretrained using the CASIA dataset; automatically downloaded
+* [InsightFace](https://insightface.ai): iresnet100 pretrained using the CASIA dataset; automatically downloaded
 
-* Denoising diffusion models: pretrained using the CelebA-HQ dataset; automatically downloaded
+* [Denoising diffusion models](https://github.com/bahjat-kawar/ddrm): pretrained using the CelebA-HQ dataset; automatically downloaded
 
 Sometimes, the download speed of denoising diffusion models is very slow. Then, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1ulkO2GFepl1IRlPjMRS_vsaVq5wG0p_x/view?usp=share_link) and prepare it as the path `exp/logs/celeba/celeba_hq.ckpt`.
 
@@ -151,7 +151,7 @@ where the following are options:
 - `logs_path` is the path of log files. (default: `"logs"`)
 - `logs_path` is the path of output images; the processed adversarial examples are in the folder `adv/` and genuine images are in the folder `genuine/`. (default: `"outputs"`)
 
-### Implementation of `iwmfdiff` into other frameworks
+### Implementation for pre-processing
 ```
 from iwmfdiff.fuctions.defense import iwmfdiff
 ```
@@ -168,20 +168,21 @@ def iwmfdiff(
 ## Results
 
 The results of the released pretrained model are as follows:
+
 |Data| LFW | CFP-FP | CPLFW | AGEDB | CALFW | IJBB (TPR@FAR=1e-4) | IJBC (TPR@FAR=1e-4) |
 |:---:|:----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 | Result | 99.80 | 98.36 | 93.13 | 98.37 | 96.05 | 94.86 | 96.15 ||
 
-The results are slightly different from the results in the paper because we replaced DataParallel with DistributedDataParallel and retrained the model.
+
 
 ## Citation
 This work is under review by [ACM CCS 2023](https://www.sigsac.org/ccs/CCS2023/).
 
 ## Acknowledgement
 This implementation is based on / inspired by:
-* [https://github.com/azrealwang/SGADV](https://github.com/azrealwang/SGADV) (generate adversarial examples)
+* [https://github.com/azrealwang/SGADV](https://github.com/azrealwang/SGADV) (adversarial examples generation)
 * [https://github.com/bahjat-kawar/ddrm](https://github.com/bahjat-kawar/ddrm) (image restoration)
-
+* [https://insightface.ai](https://insightface.ai) (deep learning model for face recognition)
 
 ## Contacts
 If you have any questions about our work, please do not hesitate to contact us by email.
