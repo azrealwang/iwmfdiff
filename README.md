@@ -116,7 +116,7 @@ inputs
 
 20 input samples of each category have been prepared for running [demos](#Demos-of-defending-Insightface). The adversarial examples are produced by [SGADV](https://github.com/azrealwang/SGADV).
 
-## Pretrained Model
+## Pretrained Models
 
 * [InsightFace](https://insightface.ai): iresnet100 pretrained using the CASIA dataset; automatically downloaded
 
@@ -153,7 +153,7 @@ where the following are options:
 
 ### Implementation for pre-processing
 ```
-from iwmfdiff.fuctions.defense import iwmfdiff
+from fuctions.defense import iwmfdiff
 ```
 ```
 def iwmfdiff(
@@ -161,13 +161,15 @@ def iwmfdiff(
 	lambda_0: float,
 	sigma_y: float,
 	s: int = 3,
-	batch: int = 1,
+	batch: int = 1
 	) -> Tensor:
 ```
 
 ## Results
 
 The results of the released pretrained model are as follows:
+
+| Defense | $FAR_{SGADV}$ (seen) | $FAR_{FGSM}$ | $FAR_{PGD}$ | $FAR_{CW}$ | $FAR_{DI^2-FGSM}$ | $FAR_{TI-FGSM}$ | $FAR_{LGC}$ | $FAR_{BIM}$
 
 |Data| LFW | CFP-FP | CPLFW | AGEDB | CALFW | IJBB (TPR@FAR=1e-4) | IJBC (TPR@FAR=1e-4) |
 |:---:|:----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
