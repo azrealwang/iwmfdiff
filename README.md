@@ -169,16 +169,16 @@ def iwmfdiff(
 
 The results of the released pretrained model are as follows:
 
-| Defense | [$FAR_{SGADV}$ (seen)](https://arxiv.org/pdf/2201.04011.pdf) | [$FAR_{FGSM}$](https://arxiv.org/pdf/1412.6572.pdf) | [$FAR_{PGD}$](https://arxiv.org/pdf/1706.06083.pdf) | [$FAR_{CW}$](https://arxiv.org/pdf/1608.04644.pdf) | [$FAR_{DI^2-FGSM}$](https://openaccess.thecvf.com/content_CVPR_2019/papers/Xie_Improving_Transferability_of_Adversarial_Examples_With_Input_Diversity_CVPR_2019_paper.pdf) | [$FAR_{TI-FGSM}$](https://openaccess.thecvf.com/content_CVPR_2019/papers/Dong_Evading_Defenses_to_Transferable_Adversarial_Examples_by_Translation-Invariant_Attacks_CVPR_2019_paper.pdf) | [$FAR_{LGC}$](https://arxiv.org/pdf/2007.04118.pdf) | [$FAR_{BIM}$](https://arxiv.org/pdf/1607.02533.pdf) |
+| Defense | $FAR_{SGADV}$ (seen) | $FAR_{FGSM}$ | $FAR_{PGD}$ | $FAR_{CW}$ | $FAR_{DI^2-FGSM}$ | $FAR_{TI-FGSM}$ | $FAR_{LGC}$ | $FAR_{BIM}$ |
 |:---:|:----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
-| [Insightface](https://insightface.ai) | 100.0 | 100.0 | 100.0 | 100.0 | 95.00 | 93.17 | 93.73 | 91.50 |
+| Insightface | 100.0 | 100.0 | 100.0 | 100.0 | 95.00 | 93.17 | 93.73 | 91.50 |
 | IWMF | 6.2 | 16.2 | 1.0 | 0.0 | 4.63 | 6.27 | 3.37 | 1.17 |
 | IWMF-Diff | 3.2 | 15.6 | 0.8 | 0.2 | 28.53 | 33.00 | 23.97 | 10.87 |
 
 
-| Defense | $FRR_{genuine}$ | [$FRR_{SGADV}$ (seen)](https://arxiv.org/pdf/2201.04011.pdf) | [$FRR_{FGSM}$](https://arxiv.org/pdf/1412.6572.pdf) | [$FRR_{PGD}$](https://arxiv.org/pdf/1706.06083.pdf) | [$FRR_{CW}$](https://arxiv.org/pdf/1608.04644.pdf) |
-|:---:|:----:|:-----:|:-----:|:-----:|
-| [Insightface](https://insightface.ai) | 0.28 | 98.30 | 6.34 | 51.92 | 42.12 |
+| Defense | $FRR_{genuine}$ | $FRR_{SGADV}$ (seen) | $FRR_{FGSM}$ | $FRR_{PGD}$ | $FRR_{CW}$ |
+|:---:|:----:|:-----:|:-----:|:-----:|:-----:|
+| Insightface | 0.28 | 98.30 | 6.34 | 51.92 | 42.12 |
 | IWMF | 6.36 | 25.50 | 19.58 | 17.38 | 13.08 |
 | IWMF-Diff | 3.22 | 12.06 | 8.28 | 9.22 | 6.18 |
 
