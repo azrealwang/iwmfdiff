@@ -114,7 +114,7 @@ inputs
 ```
 </details>
 
-20 input samples of each category have been prepared for running [demos](#Demos-of-defending-Insightface).
+20 input samples of each category have been prepared for running [demos](#Demos-of-defending-Insightface). The adversarial examples are produced by [SGADV](https://github.com/azrealwang/SGADV).
 
 ## Pretrained Model
 
@@ -122,7 +122,7 @@ inputs
 
 * Denoising diffusion models: pretrained using the CelebA-HQ dataset; automatically downloaded
 
-Sometimes, the downloading speed of denoising diffusion models is very slow. Then, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1ulkO2GFepl1IRlPjMRS_vsaVq5wG0p_x/view?usp=share_link) and prepare it as the path `exp/logs/celeba/celeba_hq.ckpt`.
+Sometimes, the download speed of denoising diffusion models is very slow. Then, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1ulkO2GFepl1IRlPjMRS_vsaVq5wG0p_x/view?usp=share_link) and prepare it as the path `exp/logs/celeba/celeba_hq.ckpt`.
 
 ## Usage
 ### Demos of defending Insightface
@@ -151,18 +151,18 @@ where the following are options:
 - `logs_path` is the path of log files. (default: `"logs"`)
 - `logs_path` is the path of output images; the processed adversarial examples are in the folder `adv/` and genuine images are in the folder `genuine/`. (default: `"outputs"`)
 
-### The function `iwmfdiff` can be directly implemented into your own framework.
+### Implementation of `iwmfdiff` into other frameworks
 ```
 from iwmfdiff.fuctions.defense import iwmfdiff
 ```
 ```
 def iwmfdiff(
-		imgs_input: Tensor,
-		lambda_0: float,
-		sigma_y: float,
-		s: int = 3,
-		batch: int = 1,
-		) -> Tensor:
+	imgs_input: Tensor,
+	lambda_0: float,
+	sigma_y: float,
+	s: int = 3,
+	batch: int = 1,
+	) -> Tensor:
 ```
 
 ## Results
