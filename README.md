@@ -168,7 +168,7 @@ def iwmfdiff(
 ## Results
 
 ### Attack success rate / False acceptance rate (%)
-*The security $FAR_{attack}$ is improved.
+* The security $FAR_{attack}$ is improved.
 
 | Defense | $FAR_{SGADV}$ (seen) | $FAR_{FGSM}$ | $FAR_{PGD}$ | $FAR_{CW}$ | $FAR_{DI^2-FGSM}$ | $FAR_{TI-FGSM}$ | $FAR_{LGC}$ | $FAR_{BIM}$ |
 |:---:|:----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
