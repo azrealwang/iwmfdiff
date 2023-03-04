@@ -118,7 +118,7 @@ inputs
 
 ## Pretrained Models
 
-* [InsightFace](https://insightface.ai): iresnet100 pretrained using the CASIA dataset; automatically downloaded
+* [InsightFace](https://github.com/deepinsight/insightface): iresnet100 pretrained using the CASIA dataset; automatically downloaded
 
 * [Denoising diffusion models](https://github.com/bahjat-kawar/ddrm): pretrained using the CelebA-HQ dataset; automatically downloaded
 
@@ -193,7 +193,7 @@ This work is under review by [ACM CCS 2023](https://www.sigsac.org/ccs/CCS2023/)
 This implementation is based on / inspired by:
 * [https://github.com/azrealwang/SGADV](https://github.com/azrealwang/SGADV) (adversarial examples generation)
 * [https://github.com/bahjat-kawar/ddrm](https://github.com/bahjat-kawar/ddrm) (image restoration)
-* [https://insightface.ai](https://insightface.ai) (deep learning model for face recognition)
+* [https://github.com/deepinsight/insightface](https://github.com/deepinsight/insightface) (deep learning model for face recognition)
 
 ## Contacts
 If you have any questions about our work, please do not hesitate to contact us by email.
