@@ -61,7 +61,68 @@ pip3 install torch torchvision
 ```
 ## Data Preparation
 
+Put LFW dataset and `pairs.txt` to `data`.
 
+<details>
+  <summary><mark><font color=darkred> Genuine images </font></mark></summary>
+
+```
+data
+|---lfw
+|     |
+|     |---AJ_Cook
+|     |     |
+|     |     |---AJ_Cook_0001.jpg
+|     |
+|     |---xxxx
+|     |    |
+...........
+|---pairs.txt
+
+```
+
+</details>
+
+<details>
+  <summary><mark><font color=darkred> Adversarial examples </font></mark></summary>
+
+```
+data
+|---lfw
+|     |
+|     |---AJ_Cook
+|     |     |
+|     |     |---AJ_Cook_0001.jpg
+|     |
+|     |---xxxx
+|     |    |
+...........
+|---pairs.txt
+
+```
+
+</details>
+
+
+<details>
+  <summary><mark><font color=darkred> Source images </font></mark></summary>
+
+```
+data
+|---lfw
+|     |
+|     |---AJ_Cook
+|     |     |
+|     |     |---AJ_Cook_0001.jpg
+|     |
+|     |---xxxx
+|     |    |
+...........
+|---pairs.txt
+
+```
+
+</details>
 
 ## Pretrained Model
 
@@ -69,17 +130,17 @@ pip3 install torch torchvision
 
 ## Usage
 ### Demos of defending Insightface
-Without defense: `lambda=0` and `sigma_y=-1`
+Without defense: `lambda_0=0` and `sigma_y=-1`
 
 ```
 python main.py --lambda_0=0 --sigma_y=-1 --batch_deno=10 --thresh=0.6131 --log_name="noDefense"
 ```
-IWMF: `lambda>0` and `sigma_y=-1`
+IWMF: `lambda_0>0` and `sigma_y=-1`
 
 ```
 python main.py --lambda_0=0.4 --sigma_y=-1 --batch_deno=10 --thresh=0.6611 --log_name="IWMF"
 ```
-IWMF-Diff: `lambda>0` and `sigma_y>0`
+IWMF-Diff: `lambda_0>0` and `sigma_y>0`
 
 ```
 python main.py --lambda_0=0.25 --sigma_y=0.15 --batch_deno=10 --thresh=0.6351 --log_name="IWMFDiff"
@@ -91,9 +152,8 @@ where the following are options:
 - `batch_deno` is the batch size for ddrm processing, depending on memory. (default: `1`)
 - `thresh` is the system threshold. (default: `0.6351`)
 - `log_name` is the log file name. (default: `"IWMFDiff"`)
-- `logs_path` is the path of log files. (default: `logs`)
-- `logs_path` is the path of output images; the processed adversarial examples are in the folder `adv/` and genuine images are in the folder `genuine/`. (default: `outputs`)
-
+- `logs_path` is the path of log files. (default: `"logs"`)
+- `logs_path` is the path of output images; the processed adversarial examples are in the folder `adv/` and genuine images are in the folder `genuine/`. (default: `"outputs"`)
 
 ### Can directly use
 
