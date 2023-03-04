@@ -61,12 +61,12 @@ pip3 install torch torchvision
 ```
 ## Data Preparation
 
-The image name must satisfy the form `00000_0.jpg`. `00000` and `_0` indicates the image id and user id/class/label, respectively. The image id must be unique and auto-increment from `00000`.
-
-To evaluate the authentication accuracy, genuine/target images must be prepared in the folder `inputs/genuine/`.
+The image name must satisfy the format `00000_0.jpg`. `00000` and `_0` indicates the image id and user id/class/label, respectively. The image id must be unique and auto-increment from `00000`.
 
 <details>
   <summary><mark><font color=darkred> Genuine/target images </font></mark></summary>
+  
+To evaluate the authentication accuracy, genuine/target images must be prepared in the folder `inputs/genuine/`.
   
 ```
 inputs
@@ -80,11 +80,11 @@ inputs
 ```
 </details>
 
-To evaluate the attack success rate, adversarial examples must be prepared in the folder `inputs/adv/`, which pair to genuine images.
-
 <details>
   <summary><mark><font color=darkred> Adversarial examples </font></mark></summary>
-  
+
+To evaluate the attack success rate, adversarial examples must be prepared in the folder `inputs/adv/`, which pair to genuine images.
+
 ```
 inputs
 |---adv
@@ -97,10 +97,10 @@ inputs
 ```
 </details>
 
-To evaluate the accuracy of classifying the adversarial examples as their true labels, source images must be prepared in the folder `inputs/source/`, which pair to adversarial examples.
-
 <details>
   <summary><mark><font color=darkred> Source images </font></mark></summary>
+
+To evaluate the accuracy of classifying the adversarial examples as their true labels, source images must be prepared in the folder `inputs/source/`, which pair to adversarial examples.
 
 ```
 inputs
@@ -118,7 +118,11 @@ inputs
 
 ## Pretrained Model
 
-[Google Drive](https://drive.google.com/file/d/1ulkO2GFepl1IRlPjMRS_vsaVq5wG0p_x/view?usp=share_link)
+* InsightFace: iresnet100 pretrained using the CASIA dataset; automatically downloaded
+
+* Denoising diffusion models: pretrained using the CelebA-HQ dataset; automatically downloaded
+
+Sometimes, the downloading speed of denoising diffusion models is very slow. Then, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1ulkO2GFepl1IRlPjMRS_vsaVq5wG0p_x/view?usp=share_link) and prepare it as the path `exp/logs/celeba/celeba_hq.ckpt`.
 
 ## Usage
 ### Demos of defending Insightface
@@ -147,10 +151,18 @@ where the following are options:
 - `logs_path` is the path of log files. (default: `"logs"`)
 - `logs_path` is the path of output images; the processed adversarial examples are in the folder `adv/` and genuine images are in the folder `genuine/`. (default: `"outputs"`)
 
-### Can directly use
-
+### The function `iwmfdiff` can be directly implemented into your own framework.
 ```
 from iwmfdiff.fuctions.defense import iwmfdiff
+```
+```
+def iwmfdiff(
+		imgs_input: Tensor,
+		lambda_0: float,
+		sigma_y: float,
+		s: int = 3,
+		batch: int = 1,
+		) -> Tensor:
 ```
 
 ## Results
