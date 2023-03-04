@@ -61,68 +61,60 @@ pip3 install torch torchvision
 ```
 ## Data Preparation
 
-Put LFW dataset and `pairs.txt` to `data`.
+The image name must satisfy the form `00000_0.jpg`. `00000` and `_0` indicates the image id and user id/class/label, respectively. The image id must be unique and auto-increment from `00000`.
+
+To evaluate the authentication accuracy, genuine/target images must be prepared in the folder `inputs/genuine/`.
 
 <details>
-  <summary><mark><font color=darkred> Genuine images </font></mark></summary>
-
+  <summary><mark><font color=darkred> Genuine/target images </font></mark></summary>
+  
 ```
-data
-|---lfw
-|     |
-|     |---AJ_Cook
-|     |     |
-|     |     |---AJ_Cook_0001.jpg
-|     |
-|     |---xxxx
-|     |    |
-...........
-|---pairs.txt
-
+inputs
+|---genuine
+|     |---00000_0.jpg
+|     |---00001_0.jpg
+|     |......
+|     |---00009_1.jpg
+|     |---00010_1.jpg
+|     |......
 ```
-
 </details>
+
+To evaluate the attack success rate, adversarial examples must be prepared in the folder `inputs/adv/`, which pair to genuine images.
 
 <details>
   <summary><mark><font color=darkred> Adversarial examples </font></mark></summary>
-
+  
 ```
-data
-|---lfw
-|     |
-|     |---AJ_Cook
-|     |     |
-|     |     |---AJ_Cook_0001.jpg
-|     |
-|     |---xxxx
-|     |    |
-...........
-|---pairs.txt
-
+inputs
+|---adv
+|     |---00000_0.jpg
+|     |---00001_0.jpg
+|     |......
+|     |---00009_1.jpg
+|     |---00010_1.jpg
+|     |......
 ```
-
 </details>
 
+To evaluate the accuracy of classifying the adversarial examples as their true labels, source images must be prepared in the folder `inputs/source/`, which pair to adversarial examples.
 
 <details>
   <summary><mark><font color=darkred> Source images </font></mark></summary>
 
 ```
-data
-|---lfw
-|     |
-|     |---AJ_Cook
-|     |     |
-|     |     |---AJ_Cook_0001.jpg
-|     |
-|     |---xxxx
-|     |    |
-...........
-|---pairs.txt
-
+inputs
+|---source
+|     |---00000_0.jpg
+|     |---00001_0.jpg
+|     |......
+|     |---00009_1.jpg
+|     |---00010_1.jpg
+|     |......
 ```
-
 </details>
+
+20 input samples of each category have been prepared for running [demos](#Demos-of-defending-Insightface).
 
 ## Pretrained Model
 
