@@ -61,7 +61,7 @@ pip3 install torch torchvision
 ```
 ## Data Preparation
 
-The image name must satisfy the format `00000_0.jpg`. `00000` and `_0` indicates the image id and user id/class/label, respectively. The image id must be unique and auto-increment from `00000`.
+The image name must satisfy `00000_0.jpg`. `00000` and `_0` indicates the image id and user id/class/label, respectively. The image id must be unique and auto-increment from `00000`. `.jpg` can be any image file format.
 
 <details>
   <summary><mark><font color=darkred> Genuine/target images </font></mark></summary>
