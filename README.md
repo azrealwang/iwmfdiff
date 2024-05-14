@@ -4,7 +4,7 @@ Hanrui Wang<sup>1</sup>, Shuo Wang<sup>2</sup>, Cunjian Chen<sup>1</sup>, Zhe Ji
 
 <sup>1</sup> Monash University, <sup>2</sup> CSIRO, <sup>3</sup>Anhui Univeristy
 
-Iterative window mean filter (IWMF) is a novel and super efficient non-deep-learning-based image filter, which gains comparable performance compared with the STOA adversarial defense. Taking advantage of IWMF, IWMF-Diff is a comprehensive framework for adversarial purification, which is applicable to any system as a pre-processing module against various attacks. IWMF-Diff gains superior performance than the SOTA defense.
+The majority of adversarial attack techniques perform well against deep face recognition when the full knowledge of the system is revealed (white-box). However, such techniques act unsuccessfully in the gray-box setting where the face templates are unknown to the attackers. In this work, we propose a similarity-based gray-box adversarial attack (SGADV) technique.
 
 <img src="figures/samples.jpg" alt="samples" style="width:400px;"/>
 
