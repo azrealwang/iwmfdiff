@@ -1,5 +1,3 @@
-import eagerpy as ep
-import warnings
 import os
 import numpy as np
 import torch
@@ -8,98 +6,7 @@ from torch.nn import CosineSimilarity
 from torch import Tensor
 from torchvision.utils import save_image, make_grid
 from PIL import Image
-from .types import Bounds
-from .models import Model
-
-def samples(
-    fmodel: Model,
-    dataset: str = "lfw",
-    index: int = 0,
-    batchsize: int = 1,
-    data_format: Optional[str] = None,
-    bounds: Optional[Bounds] = None,
-    shape: Optional[Tuple[int, int]] = None,
-) -> Any:
-    if hasattr(fmodel, "data_format"):
-        if data_format is None:
-            data_format = fmodel.data_format  # type: ignore
-        elif data_format != fmodel.data_format:  # type: ignore
-            raise ValueError(
-                f"data_format ({data_format}) does not match model.data_format ({fmodel.data_format})"  # type: ignore
-            )
-    elif data_format is None:
-        raise ValueError(
-            "data_format could not be inferred, please specify it explicitly"
-        )
-
-    if bounds is None:
-        bounds = fmodel.bounds
-
-    images, labels = _samples(
-        dataset=dataset,
-        index=index,
-        batchsize=batchsize,
-        data_format=data_format,
-        bounds=bounds,
-        shape=shape,
-    )
-    
-    if hasattr(fmodel, "dummy") and fmodel.dummy is not None:  # type: ignore
-        images = ep.from_numpy(fmodel.dummy, images).raw  # type: ignore
-        labels = ep.from_numpy(fmodel.dummy, labels).raw  # type: ignore
-    else:
-        warnings.warn(f"unknown model type {type(fmodel)}, returning NumPy arrays")
-    return images, labels
-
-
-def _samples(
-    dataset: str,
-    index: int,
-    batchsize: int,
-    data_format: str,
-    bounds: Bounds,
-    shape: Tuple[int, int],
-) -> Tuple[Any, Any]:   
-
-    images, labels = [], []
-    basepath = r""
-    samplepath = os.path.join(basepath, f"{dataset}")
-    files = os.listdir(samplepath)
-    for idx in range(index, index + batchsize):
-        i = idx
-
-        # get filename and label
-        file = [n for n in files if f"{i:05d}_" in n][0]
-        label = int(file.split(".")[0].split("_")[-1])
-
-        # open file
-        path = os.path.join(samplepath, file)
-        image = Image.open(path)
-        
-        # if model_type == "insightface" or model_type == "CurricularFace":
-        #     image = image.resize((112, 112))
-        if shape is not None:
-            image = image.resize(shape)
-        
-        image = np.asarray(image, dtype=np.float32)
-
-        if image.ndim == 2:
-            image = image[..., np.newaxis]
-
-        assert image.ndim == 3
-
-        if data_format == "channels_first":
-            image = np.transpose(image, (2, 0, 1))
-        
-        images.append(image)
-        labels.append(label)
-    
-    images_ = np.stack(images)
-    labels_ = np.array(labels)
-
-    if bounds != (0, 255):
-        images_ = images_ / 255 * (bounds[1] - bounds[0]) + bounds[0]
-    return images_, labels_
+from math import ceil
 
 def imgs_resize(imgs,shape):
     l,_,_,_ = imgs.shape
@@ -119,20 +26,69 @@ def imgs_resize(imgs,shape):
 def save_all_images(
         imgs: Any,
         labels: Any,
-        output_path: str
+        output_path: str,
+        start_idx: Optional[int] = 0,
         ) -> None:
     amount = imgs.shape[0]
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
     for i in range(amount):
-        save_image(imgs[i], f'{output_path}/%05d_%d.png'%(i,labels[i]))
+        save_image(imgs[i], f'{output_path}/%05d_%d.png'%(i+start_idx,labels[i]))
 
 def cos_similarity_score(featuresA: Tensor, featuresB: Tensor) -> Tensor:
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     cos = CosineSimilarity(dim=1,eps=1e-6)
     featuresA = featuresA.to(device)
     featuresB = featuresB.to(device)
     similarity = (cos(featuresA,featuresB)+1)/2
     del featuresA, featuresB
+    
     return similarity
+
+def load_samples(
+    path: str,
+    amount: Optional[int] = None,
+    shape: Optional[Tuple[int, int]] = None,
+) -> Tuple[Any, Any]:   
+
+    images, labels = [], []
+    basepath = r""
+    samplepath = os.path.join(basepath, f"{path}")
+    files = os.listdir(path)
+    if amount is None:
+        amount = len(files)
+    for i in range(amount):
+        # get filename and label
+        file = [n for n in files if f"{i:05d}_" in n][0]
+        label = int(file.split(".")[0].split("_")[-1])
+
+        # open file
+        path = os.path.join(samplepath, file)
+        image = Image.open(path)
+        
+        if shape is not None:
+            image = image.resize(shape)
+        
+        image = np.asarray(image, dtype=np.float32)
+
+        if image.ndim == 2:
+            image = image[..., np.newaxis]
+
+        assert image.ndim == 3
+        
+        image = np.transpose(image, (2, 0, 1))
+        
+        images.append(image)
+        labels.append(label)
+    
+    images_ = np.stack(images)
+    labels_ = np.array(labels)
+
+    images_ = images_ / 255
+    images_ = np.ascontiguousarray(images_)
+    
+    return images_, labels_
+
 
 def false_rate(
     featuresA: Tensor, 
@@ -174,3 +130,23 @@ def FMR(
         fmr = np.float32(scores.cpu()>=thresh).mean()
 
     return fmr
+
+def predict(
+    model,
+    imgs: Tensor,
+    batch_size: int=1,
+    device: str='cpu',
+    )-> Tensor:
+    count = len(imgs)
+    batches = ceil(count/batch_size)
+    logits = Tensor([])
+    for b in range(batches):
+        if b == batches-1:
+            idx = range(b*batch_size,count)
+        else:
+            idx = range(b*batch_size,(b+1)*batch_size)
+        with torch.no_grad():
+            logits_batch = model.to(device)(imgs[idx].to(device)).cpu()
+        logits = torch.cat((logits, logits_batch), 0)
+    
+    return logits

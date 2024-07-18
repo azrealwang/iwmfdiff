@@ -1,6 +1,5 @@
-.project
-.pydevproject
 /exp
-/outputs
+/imgs
 /logs
+.DS_Store
 __pycache__/
