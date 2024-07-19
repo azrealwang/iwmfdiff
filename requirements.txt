@@ -1,3 +1,2 @@
-eagerpy
 PyYAML
 tqdm
