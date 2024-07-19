@@ -20,6 +20,8 @@ python -u attack.py --attack Square --eps 0.06 --model insightface --thres 0.613
 python -u attack.py --attack Square --eps 1 --model insightface --thres 0.6131 --batch_size 100
 python -u attack.py --attack Square --eps 0.03 --model facenet --thres 0.7056 --batch_size 100
 
+python -u defense.py --folder  --input imgs/adv --lambda_0 0 --sigma_y 0.25 --batch_size 100 --eval_adv --model insightface --thres 0.7056
+
 #SBATCH --nodelist=gpuhost04
 
 scontrol show job 559928
