@@ -18,14 +18,13 @@ def iwmfdiff(
         s: int = 3,
         batch: int = 1,
         ) -> Tensor:
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     _,_,h,w = imgs_input.shape
     imgs = iwmf(imgs_input,lambda_0,s)
     if sigma_y>0:
         print("**********************denoising images******************************")
         imgs = imgs_resize(imgs,(256,256))
         imgs = ddrm(imgs,batch=batch,sigma_0=sigma_y)
-        imgs = Tensor(imgs_resize(imgs,(h,w))).to(device)
+        imgs = Tensor(imgs_resize(imgs,(h,w)))
     
     return imgs
 
@@ -57,7 +56,7 @@ def ddrm(
         deg: str = "deno",
         ) -> Tensor:
         # load config
-        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         img = img.to(device)
         with open(os.path.join("configs", config_name), "r") as f:
             config_tmp = yaml.safe_load(f)
