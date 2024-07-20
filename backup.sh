@@ -13,6 +13,7 @@ python -u attack.py --attack APGD --eps 1 --model insightface --thres 0.6131 --b
 python -u attack.py --attack APGD --eps 0.03 --model facenet --thres 0.7056 --batch_size 100
 
 python -u attack.py --attack APGD_EOT --eps 0.03 --model insightface --thres 0.6131 --batch_size 100
+python -u attack.py --attack APGD_EOT --eps 0.03 --model facenet --thres 0.7056 --batch_size 100
 
 python -u attack.py --attack Square --eps 0.015 --model insightface --thres 0.6131 --batch_size 100
 python -u attack.py --attack Square --eps 0.03 --model insightface --thres 0.6131 --batch_size 100
@@ -20,7 +21,9 @@ python -u attack.py --attack Square --eps 0.06 --model insightface --thres 0.613
 python -u attack.py --attack Square --eps 1 --model insightface --thres 0.6131 --batch_size 100
 python -u attack.py --attack Square --eps 0.03 --model facenet --thres 0.7056 --batch_size 100
 
-python -u defense.py --folder  --input imgs/adv --lambda_0 0 --sigma_y 0.25 --batch_size 100 --eval_adv --model insightface --thres 0.7056
+python -u defense.py --folder APGD-Linf-0.03-insightface-0.6131 --input imgs/adv --lambda_0 0 --sigma_y 0.15 --batch_size 50 --eval_adv --model insightface --thres 0.7119
+
+python -u evaluation.py --input_eval imgs/purified/achive/APGD-Linf-0.015-insightface-0.6131-0.0-0.15-3 --eval_adv --model insightface --thres 0.6131 --batch_size 100
 
 #SBATCH --nodelist=gpuhost04
 

@@ -79,7 +79,7 @@ def main() -> None:
     elif attack_name == 'APGD_EOT':
         attack = APGDAttack(model,norm=norm,eps=eps,loss='fr_loss_targeted',device=device,thres=thres,n_iter=40,eot_iter=20)
     elif attack_name == 'Square':
-        attack = SquareAttack(model,norm=norm,eps=eps,device=device,thres=thres,n_queries=5000)
+        attack = SquareAttack(model,norm=norm,eps=eps,device=device,thres=1,n_queries=20000)
     
     x_adv = Tensor([])
     start_time = time.time()

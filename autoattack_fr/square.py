@@ -65,7 +65,7 @@ class SquareAttack():
         self.loss = loss
         self.rescale_schedule = resc_schedule
         self.device = device
-        self.return_all = False
+        self.return_all = True
         self.thres = thres
     
     def margin_and_loss(self, x, y):
@@ -565,7 +565,7 @@ class SquareAttack():
 
         x = x.detach().clone().float().to(self.device)
         adv = x.clone()
-        #adv_all = x.clone()
+        adv_all = x.clone()
         if y is None:
             if not self.targeted:
                 with torch.no_grad():
@@ -614,7 +614,7 @@ class SquareAttack():
 
                 acc[ind_to_fool[ind_curr]] = 0
                 adv[ind_to_fool[ind_curr]] = adv_curr[ind_curr].clone()
-                #adv_all[ind_to_fool] = adv_curr.clone()
+                adv_all[ind_to_fool] = adv_curr.clone()
                 if self.verbose:
                     print('restart {} - robust accuracy: {:.2%}'.format(
                         counter, acc.float().mean()),
@@ -624,6 +624,6 @@ class SquareAttack():
         if not self.return_all:
             return adv
         else:
-            print('returning final points')
+            #print('returning final points')
             return adv_all
 
