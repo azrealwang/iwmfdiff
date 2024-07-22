@@ -16,6 +16,7 @@ def parse_args_and_config():
     parser.add_argument('--attack', help='APGD (white-box attack), APGD_EOT (adaptive white-box attack), or Square (black-box attack)', type=str, default='APGD')
     parser.add_argument('--norm', help='Linf, L2, or L1', type=str, default='Linf')
     parser.add_argument('--eps', help='attack budget', type=float, default=0.03)
+    parser.add_argument('--seed', help='seed', type=int, default=None)
     parser.add_argument('--model', help='facenet or insightface', type=str, default='insightface')
     parser.add_argument('--thres', help='threshold', type=float, default=0.6131)
     parser.add_argument('--batch_size', help='batch size depends on memory', type=int, default=1)
@@ -35,6 +36,7 @@ def main() -> None:
     norm = args.norm
     assert norm in ['Linf', 'L2', 'L1']
     eps = args.eps
+    seed = args.seed
     model = args.model
     assert model in ['insightface', 'facenet']
     thres = args.thres
@@ -75,11 +77,11 @@ def main() -> None:
     
     ## Attack
     if attack_name == 'APGD':
-        attack = APGDAttack(model,norm=norm,eps=eps,loss='fr_loss_targeted',device=device,thres=thres,n_iter=200)
+        attack = APGDAttack(model,norm=norm,eps=eps,loss='fr_loss_targeted',device=device,thres=thres,n_iter=200,seed=seed)
     elif attack_name == 'APGD_EOT':
-        attack = APGDAttack(model,norm=norm,eps=eps,loss='fr_loss_targeted',device=device,thres=thres,n_iter=40,eot_iter=20)
+        attack = APGDAttack(model,norm=norm,eps=eps,loss='fr_loss_targeted',device=device,thres=thres,n_iter=40,eot_iter=20,seed=seed)
     elif attack_name == 'Square':
-        attack = SquareAttack(model,norm=norm,eps=eps,device=device,thres=1,n_queries=20000)
+        attack = SquareAttack(model,norm=norm,eps=eps,device=device,thres=1,n_queries=20000,seed=seed)
     
     x_adv = Tensor([])
     start_time = time.time()
