@@ -325,6 +325,11 @@ class APGDAttack():
         n_reduced = 0
 
         u = torch.arange(x.shape[0], device=self.device)
+
+        ### Counterattack
+        counterAttack = True
+        printLoss = False
+        loss_seq = list()
         for i in range(self.n_iter):
             ### gradient step
             with torch.no_grad():
@@ -366,7 +371,11 @@ class APGDAttack():
                     
                     
                 x_adv = x_adv_1 + 0.
-
+            
+            ### Counterattack
+            if counterAttack:
+                from functions.defense import iwmfdiff
+                x_adv = iwmfdiff(x_adv, 0, 0.15, 3, 50, self.seed).to(self.device)
             ### get gradient
             x_adv.requires_grad_()
             grad = torch.zeros_like(x)
@@ -376,7 +385,7 @@ class APGDAttack():
                         logits = self.model(x_adv)
                         loss_indiv = criterion_indiv(logits, y)
                         loss = loss_indiv.sum()
-    
+                        loss_seq.append(loss.tolist())
                     grad += torch.autograd.grad(loss, [x_adv])[0].detach()
                 else:
                     if self.y_target is None:
@@ -451,7 +460,11 @@ class APGDAttack():
             # if acc.float().mean() == 0:
             #     break
         #
-        
+        if printLoss:
+            from scipy.io import savemat
+            savemat(f'mat/convergence.mat', {"loss":loss_seq,})
+            exit()
+
         return (x_best, acc, loss_best, x_best_adv)
 
     def perturb(self, x, y=None, best_loss=False, x_init=None):

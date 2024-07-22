@@ -17,7 +17,12 @@ def iwmfdiff(
         sigma_y: float,
         s: int = 3,
         batch: int = 1,
+        seed: int = None,
         ) -> Tensor:
+    if seed is not None:
+        np.random.seed(seed)
+        torch.random.manual_seed(seed)
+        torch.cuda.random.manual_seed(seed)
     _,_,h,w = imgs_input.shape
     imgs = iwmf(imgs_input,lambda_0,s)
     if sigma_y>0:

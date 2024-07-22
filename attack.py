@@ -46,7 +46,7 @@ def main() -> None:
     args.eval_adv = True
     args.eval_genuine = False
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    folder = f'{attack_name}-{norm}-{eps}-{model}-{thres}'
+    folder = f'{attack_name}-{norm}-{eps}-{model}-{thres}-diffpure'
     
     ## Compute clean accuracy
     print(f"Before attack......")
@@ -75,7 +75,7 @@ def main() -> None:
     
     ## Attack
     if attack_name == 'APGD':
-        attack = APGDAttack(model,norm=norm,eps=eps,loss='fr_loss_targeted',device=device,thres=thres,n_iter=40)
+        attack = APGDAttack(model,norm=norm,eps=eps,loss='fr_loss_targeted',device=device,thres=thres,n_iter=200)
     elif attack_name == 'APGD_EOT':
         attack = APGDAttack(model,norm=norm,eps=eps,loss='fr_loss_targeted',device=device,thres=thres,n_iter=40,eot_iter=20)
     elif attack_name == 'Square':
