@@ -15,7 +15,7 @@ def parse_args_and_config():
     parser.add_argument('--eval_adv', help='evaluate adv before and after purification', action='store_true')
     parser.add_argument('--input_target', help='target image path', type=str, default='imgs/target/lfw')
     parser.add_argument('--input_source', help='source image path', type=str, default='imgs/source/lfw')
-    parser.add_argument('--model', help='facenet or insightface', type=str, default='insightface')
+    parser.add_argument('--model', help='PIN', type=str, default='PIN')
     parser.add_argument('--thres', help='threshold', type=float, default=0.6131)
     parser.add_argument('--batch_size', help='batch size depends on memory', type=int, default=1)
     parser.add_argument('--input_eval', help='input image path', type=str, required=True)
@@ -37,34 +37,35 @@ def evaluate(args) -> None:
     input_target = args.input_target
     input_source = args.input_source
     model = args.model
-    assert model in ['insightface', 'facenet']
+    assert model in ['PIN']
     thres = args.thres
     batch_size = args.batch_size
     input_eval = args.input_eval
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     ## Load Model
-    if model == 'insightface':
-        model = iresnet100(pretrained=True).eval().to(device)
+    if model == 'PIN':
+        trans = transforms.Compose([
+            transforms.Grayscale(1),
+        ])
+        config = Config()
+        model = DefenseModel(config)
         shape = (112,112)
-    elif model == 'facenet':
-        model = InceptionResnetV1(pretrained='vggface2').eval().to(device)
-        shape = (160,160)
     else:
         raise ValueError("unsupported model")
     
     ## Load inputs
     x_test, y_test = load_samples(input_eval,end_idx,shape)
-    x_test = Tensor(x_test)
+    x_test = trans(Tensor(x_test))
     y_test = Tensor(y_test)
     test = predict(model,x_test,batch_size,device)
     x_target, y_target = load_samples(input_target,end_idx,shape)
-    x_target = Tensor(x_target)
+    x_target = trans(Tensor(x_target))
     y_target = Tensor(y_target)
     target = predict(model,x_target,batch_size,device)
     if args.eval_adv:
         x_source, y_source = load_samples(input_source,end_idx,shape)
-        x_source = Tensor(x_source)
+        x_source = trans(Tensor(x_source))
         y_source = Tensor(y_source)
         source = predict(model,x_source,batch_size,device)
 

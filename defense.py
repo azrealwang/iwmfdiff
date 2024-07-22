@@ -11,6 +11,7 @@ def parse_args_and_config():
     parser.add_argument('--lambda_0', help='window amount >= 0; 0 indicates no blurring', type=float, default=0.25)
     parser.add_argument('--sigma_y', help='Gaussian standard deviation in [0,1]; 0 indicates no denoising', type=float, default=0.15)
     parser.add_argument('--s', help='window size (px)', type=int, default=3)
+    parser.add_argument('--seed', help='seed', type=int, default=None)
     parser.add_argument('--batch_size', help='batch size depends on memory', type=int, default=1)
     parser.add_argument('--folder', help='folder name', type=str, required=True)
     parser.add_argument('--input', help='input image path, excluding folder name', type=str, required=True)
@@ -38,6 +39,7 @@ def main() -> None:
     assert 0 <= sigma_y <= 1
     s = args.s
     assert s > 0
+    seed = args.seed
     batch_size = args.batch_size
     folder = args.folder
     input = args.input
@@ -55,7 +57,7 @@ def main() -> None:
     x, y = load_samples(f'{input}/{folder}',end_idx)
     x = Tensor(x).to(device)
     y = Tensor(y).to(device)
-    x_p = iwmfdiff(x,lambda_0,sigma_y,s,batch_size) # IWMFDiff
+    x_p = iwmfdiff(x,lambda_0,sigma_y,s,batch_size,seed) # IWMFDiff
     save_all_images(x_p,y,f'{output}/{folder_p}')
     
     ## Compute purification accuracy

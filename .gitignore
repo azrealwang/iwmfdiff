@@ -2,4 +2,6 @@
 /imgs
 /logs
 .DS_Store
+checkpoint
+face_eigen
 __pycache__/
