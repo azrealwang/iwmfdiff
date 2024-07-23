@@ -131,6 +131,7 @@ class APGDAttack():
         self.norm = norm
         self.n_restarts = n_restarts
         self.seed = seed
+        self.seed_0 = seed
         self.loss = loss
         self.eot_iter = eot_iter
         self.thr_decr = rho
@@ -327,7 +328,7 @@ class APGDAttack():
         u = torch.arange(x.shape[0], device=self.device)
 
         ### Counterattack
-        counterAttack = True
+        counterAttack = False
         printLoss = False
         loss_seq = list()
         for i in range(self.n_iter):
@@ -375,18 +376,20 @@ class APGDAttack():
             ### Counterattack
             if counterAttack:
                 from functions.defense import iwmfdiff
-                x_adv = iwmfdiff(x_adv, 0, 0.15, 3, 50, self.seed).to(self.device)
+                x_purified = iwmfdiff(x_adv, 0, 0.15, 3, 50, self.seed_0).to(self.device)
+            else:
+                x_purified = x_adv.clone()
             ### get gradient
-            x_adv.requires_grad_()
+            x_purified.requires_grad_()
             grad = torch.zeros_like(x)
             for _ in range(self.eot_iter):
                 if not self.is_tf_model:
                     with torch.enable_grad():
-                        logits = self.model(x_adv)
+                        logits = self.model(x_purified)
                         loss_indiv = criterion_indiv(logits, y)
                         loss = loss_indiv.sum()
                         loss_seq.append(loss.tolist())
-                    grad += torch.autograd.grad(loss, [x_adv])[0].detach()
+                    grad += torch.autograd.grad(loss, [x_purified])[0].detach()
                 else:
                     if self.y_target is None:
                         logits, loss_indiv, grad_curr = criterion_indiv(x_adv, y)
