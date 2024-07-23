@@ -3,10 +3,13 @@ import time
 import torch
 from math import ceil
 from torch import Tensor
+import torchvision.transforms as transforms
 from functions.insightface.iresnet import iresnet100
 from facenet_pytorch import InceptionResnetV1
+from PIN.config_test import Config
+from PIN.defense_model import DefenseModel
 from functions.utils import save_all_images, load_samples, predict
-from evaluation import evaluate
+from evaluation_PIN import evaluate
 from autoattack_fr.autopgd_base import APGDAttack
 from autoattack_fr.square import SquareAttack
 
@@ -17,7 +20,7 @@ def parse_args_and_config():
     parser.add_argument('--norm', help='Linf, L2, or L1', type=str, default='Linf')
     parser.add_argument('--eps', help='attack budget', type=float, default=0.03)
     parser.add_argument('--seed', help='seed', type=int, default=None)
-    parser.add_argument('--model', help='facenet or insightface', type=str, default='insightface')
+    parser.add_argument('--model', help='PIN', type=str, default='PIN')
     parser.add_argument('--thres', help='threshold', type=float, default=0.6131)
     parser.add_argument('--batch_size', help='batch size depends on memory', type=int, default=1)
     parser.add_argument('--input_target', help='target image path', type=str, default='imgs/target/lfw')
@@ -38,7 +41,7 @@ def main() -> None:
     eps = args.eps
     seed = args.seed
     model = args.model
-    assert model in ['insightface', 'facenet']
+    assert model in ['PIN']
     thres = args.thres
     batch_size = args.batch_size
     input_target = args.input_target
@@ -56,22 +59,23 @@ def main() -> None:
     evaluate(args)
 
     ## Load Model
-    if model == 'insightface':
-        model = iresnet100(pretrained=True).eval().to(device)
+    if model == 'PIN':
+        trans = transforms.Compose([
+            transforms.Grayscale(1),
+        ])
+        config = Config()
+        model = DefenseModel(config)
         shape = (112,112)
-    elif model == 'facenet':
-        model = InceptionResnetV1(pretrained='vggface2').eval().to(device)
-        shape = (160,160)
     else:
         raise ValueError("unsupported model")
     
     ## Load inputs
     x_target, y_target = load_samples(input_target,end_idx,shape)
-    x_target = Tensor(x_target)
+    x_target = trans(Tensor(x_target))
     y_target = Tensor(y_target)
     target = predict(model,x_target,batch_size,device)
     x_source, y_source = load_samples(input_source,end_idx,shape)
-    x_source = Tensor(x_source)
+    x_source = trans(Tensor(x_source))
     y_source = Tensor(y_source)
     source = predict(model,x_source,batch_size,device)
     
