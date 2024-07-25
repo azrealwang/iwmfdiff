@@ -13,7 +13,7 @@ orig_path = f'imgs/source/lfw'
 test_path = f'imgs/purified/archive'
 folder_name = 'APGD-Linf-0.06-insightface-0.6131-0.25-0.15-3'
 outputs_path = f"imgs/tmp/"
-idx = 0
+idx = 20
 # model: 20,  (91), 100, (210), 223, 229, 233, 281, 328, 358, 377,402, 446, 587, 668, 720, 728, 766, 841;
 # reverse: 22,  32, (118), 237, 266, 368, (437), 597, 655, (695), 734, 900, 995
 # Greedy: Cifar-10 548, (735)
@@ -35,7 +35,7 @@ print(eps*255)
 if eps == 0:
     eps = 0.00000001
 #diff = ((x_test-x_orig)+eps/255)/2*255/eps # normalize
-diff = (x_test-x_orig)*255 # normalize
+diff = (x_test-x_orig)*1/eps # normalize
 diff = rgb2gray(diff) # rgb to gray
 if not os.path.exists(outputs_path):
     os.makedirs(outputs_path)
