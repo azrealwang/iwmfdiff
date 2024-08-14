@@ -120,7 +120,9 @@ class APGDAttack():
             use_largereps=False,
             is_tf_model=False,
             logger=None,
-            thres=0.6):
+            thres=0.6,
+            adaptive=False,
+            defense=None):
         """
         AutoPGD implementation in PyTorch
         """
@@ -149,6 +151,8 @@ class APGDAttack():
         self.y_target = None
         self.logger = logger
         self.thres = thres
+        self.adaptive = adaptive
+        self.defense = defense
 
         assert self.norm in ['Linf', 'L2', 'L1']
         assert not self.eps is None
@@ -327,8 +331,6 @@ class APGDAttack():
 
         u = torch.arange(x.shape[0], device=self.device)
 
-        ### Counterattack
-        counterAttack = False
         printLoss = False
         loss_seq = list()
         for i in range(self.n_iter):
@@ -373,10 +375,9 @@ class APGDAttack():
                     
                 x_adv = x_adv_1 + 0.
             
-            ### Counterattack
-            if counterAttack:
+            if self.adaptive:
                 from functions.defense import iwmfdiff
-                x_purified = iwmfdiff(x_adv, 0, 0.15, 3, 50, self.seed_0).to(self.device)
+                x_purified = iwmfdiff(x_adv, self.defense[0], self.defense[1], 3, len(x_adv), self.seed_0).to(self.device)
             else:
                 x_purified = x_adv.clone()
             ### get gradient
