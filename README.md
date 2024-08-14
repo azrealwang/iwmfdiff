@@ -110,26 +110,14 @@ def iwmfdiff(
 	) -> Tensor:
 ```
 
-## Results
+## Results (%)
 
-### Attack success rate / False acceptance rate (%)
-* The security $FAR_{attack}$ is improved.
-
-| Defense | $FAR_{SGADV}$ (seen) | $FAR_{FGSM}$ | $FAR_{PGD}$ | $FAR_{CW}$ | $FAR_{DI^2-FGSM}$ | $FAR_{TI-FGSM}$ | $FAR_{LGC}$ | $FAR_{BIM}$ |
-|:---:|:----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
-| Insightface | 100.0 | 100.0 | 100.0 | 100.0 | 95.00 | 93.17 | 93.73 | 91.50 |
-| IWMF | 6.2 | 16.2 | 1.0 | 0.0 | 4.63 | 6.27 | 3.37 | 1.17 |
-| IWMF-Diff | 3.2 | 15.6 | 0.8 | 0.2 | 28.53 | 33.00 | 23.97 | 10.87 |
-
-### Authentication accuracy / False rejection rate (%)
-* The authentication accuracy $FRR_{genuine}$ is preserved.
-* The robustness of classifying adversarial examples as their true labels $FRR_{attack}$ is improved.
-
-| Defense | $FRR_{genuine}$ | $FRR_{SGADV}$ (seen) | $FRR_{FGSM}$ | $FRR_{PGD}$ | $FRR_{CW}$ |
-|:---:|:----:|:-----:|:-----:|:-----:|:-----:|
-| Insightface | 0.28 | 98.30 | 6.34 | 51.92 | 42.12 |
-| IWMF | 6.36 | 25.50 | 19.58 | 17.38 | 13.08 |
-| IWMF-Diff | 3.22 | 12.06 | 8.28 | 9.22 | 6.18 |
+| Defense | FRR-Genuie | FAR-APGD | FAR-APGD_EOT | FAR-Square | FAR-Adaptive | Time Cost (s) |
+|:---:|:----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+| Insightface | 0.28 | 100 | 100 | 100 | N/A | N/A |
+| DiffPure | 5.00 | 17.4 | 17.6 | 20.4 | 99.4 | 3.41 |
+| IWMF | 6.36 | 9.2 | 7.6 | 28.8 | 80.4 | 0.36 |
+| IWMF-Diff | 3.22 | 6.6 | 5.0 | 19.8 | 77.4 | 3.79 |
 
 ## Citation
 This work has been accepted by IEEE Transactions on Dependable and Secure Computing.
