@@ -1,7 +1,7 @@
-/exp
-/imgs
-/logs
 .DS_Store
+__pycache__/
+exp
 checkpoint
 face_eigen
-__pycache__/
+logs
+notSubmit

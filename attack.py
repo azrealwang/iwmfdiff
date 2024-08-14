@@ -13,30 +13,37 @@ from autoattack_fr.square import SquareAttack
 
 def parse_args_and_config():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--attack', help='APGD (white-box attack), APGD_EOT (adaptive white-box attack), or Square (black-box attack)', type=str, default='APGD')
+    # Attack
+    parser.add_argument('--attack', help='APGD (white-box attack), APGD_EOT (adaptive attack), Square (black-box attack), Adaptive (strong adaptive)', type=str, default='APGD')
     parser.add_argument('--norm', help='Linf, L2, or L1', type=str, default='Linf')
     parser.add_argument('--eps', help='attack budget', type=float, default=0.03)
     parser.add_argument('--seed', help='seed', type=int, default=None)
-    parser.add_argument('--model', help='facenet or insightface', type=str, default='insightface')
-    parser.add_argument('--thres', help='threshold', type=float, default=0.6131)
+    parser.add_argument('--defense', help='Defense setting only for Adaptive', type=tuple, default=None)
+    # Model and Input
+    parser.add_argument('--model', help='facenet or insightface', type=str, required=True)
+    parser.add_argument('--thres', help='threshold', type=float, required=True)
     parser.add_argument('--batch_size', help='batch size depends on memory', type=int, default=1)
-    parser.add_argument('--input_target', help='target image path', type=str, default='imgs/target/lfw')
-    parser.add_argument('--input_source', help='source image path', type=str, default='imgs/source/lfw')
+    parser.add_argument('--input_target', help='target image path', type=str, default='imgs/target/')
+    parser.add_argument('--input_source', help='source image path', type=str, default='imgs/source/')
+    # Output
     parser.add_argument('--output_adv', help='adv image path', type=str, default='imgs/adv')
+
     args = parser.parse_args()
 
     return args
 
 def main() -> None:
-    end_idx = 500
     ## Settings
     args = parse_args_and_config()
     attack_name = args.attack
-    assert attack_name in ['APGD', 'APGD_EOT', 'Square']
+    assert attack_name in ['APGD', 'APGD_EOT', 'Square', 'Adaptive']
     norm = args.norm
     assert norm in ['Linf', 'L2', 'L1']
     eps = args.eps
     seed = args.seed
+    defense = args.defense
+    if attack_name == 'Adaptive' and defense is None:
+        raise ValueError('Adaptive attack requires defense settings')
     model = args.model
     assert model in ['insightface', 'facenet']
     thres = args.thres
@@ -66,14 +73,13 @@ def main() -> None:
         raise ValueError("unsupported model")
     
     ## Load inputs
-    x_target, y_target = load_samples(input_target,end_idx,shape)
+    x_target, y_target = load_samples(input_target,shape=shape)
     x_target = Tensor(x_target)
     y_target = Tensor(y_target)
     target = predict(model,x_target,batch_size,device)
-    x_source, y_source = load_samples(input_source,end_idx,shape)
+    x_source, y_source = load_samples(input_source,shape=shape)
     x_source = Tensor(x_source)
     y_source = Tensor(y_source)
-    source = predict(model,x_source,batch_size,device)
     
     ## Attack
     if attack_name == 'APGD':
@@ -82,7 +88,9 @@ def main() -> None:
         attack = APGDAttack(model,norm=norm,eps=eps,loss='fr_loss_targeted',device=device,thres=thres,n_iter=40,eot_iter=20,seed=seed)
     elif attack_name == 'Square':
         attack = SquareAttack(model,norm=norm,eps=eps,device=device,thres=1,n_queries=20000,seed=seed)
-    
+    elif attack_name == 'Adaptive':
+        attack = APGDAttack(model,norm=norm,eps=eps,loss='fr_loss_targeted',device=device,thres=thres,n_iter=40,seed=seed,adaptive=True,defense=defense)
+
     x_adv = Tensor([])
     start_time = time.time()
     for i in range(ceil(len(y_target)/batch_size)):

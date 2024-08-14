@@ -8,27 +8,29 @@ from evaluation import evaluate
 
 def parse_args_and_config():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lambda_0', help='window amount >= 0; 0 indicates no blurring', type=float, default=0.25)
-    parser.add_argument('--sigma_y', help='Gaussian standard deviation in [0,1]; 0 indicates no denoising', type=float, default=0.15)
-    parser.add_argument('--s', help='window size (px)', type=int, default=3)
+    # Defense
+    parser.add_argument('--lambda_0', help='window amount >= 0; 0 indicates DiffPure', type=float, default=0.25)
+    parser.add_argument('--sigma_y', help='Gaussian standard deviation in [0,1]; 0 indicates IWMF', type=float, default=0.15)
+    parser.add_argument('--s', help='window size (px) of IWMF', type=int, default=3)
     parser.add_argument('--seed', help='seed', type=int, default=None)
     parser.add_argument('--batch_size', help='batch size depends on memory', type=int, default=1)
-    parser.add_argument('--folder', help='folder name', type=str, required=True)
-    parser.add_argument('--input', help='input image path, excluding folder name', type=str, required=True)
-    parser.add_argument('--output', help='purified image path', type=str, default='imgs/purified')
-    # evaluation
-    parser.add_argument('--eval_genuine', help='evaluate genuine before and after purification', action='store_true')
-    parser.add_argument('--eval_adv', help='evaluate adv before and after purification', action='store_true')
+    # Input and Output
+    parser.add_argument('--folder', help='input folder name', type=str, required=True)
+    parser.add_argument('--input', help='input folder path, excluding folder name', type=str, required=True)
     parser.add_argument('--input_target', help='target image path', type=str, default='imgs/target/lfw')
     parser.add_argument('--input_source', help='source image path', type=str, default='imgs/source/lfw')
-    parser.add_argument('--model', help='facenet or insightface', type=str, default='insightface')
-    parser.add_argument('--thres', help='threshold', type=float, default=0.6131)
+    parser.add_argument('--output', help='purified image path', type=str, default='imgs/purified')
+    # evaluation
+    parser.add_argument('--eval_genuine', help='compute FRR for genuine before or after purification', action='store_true')
+    parser.add_argument('--eval_adv', help='compute FAR and FRR for adv before or after purification', action='store_true')
+    parser.add_argument('--model', help='facenet or insightface', type=str, required=True)
+    parser.add_argument('--thres', help='threshold', type=float, required=True)
+
     args = parser.parse_args()
 
     return args
 
 def main() -> None:
-    end_idx = 500
     ## Settings
     args = parse_args_and_config()
     if args.lambda_0 == 0 and args.sigma_y == 0:
@@ -54,7 +56,7 @@ def main() -> None:
     evaluate(args)
     
     ## Purification
-    x, y = load_samples(f'{input}/{folder}',end_idx)
+    x, y = load_samples(f'{input}/{folder}')
     x = Tensor(x).to(device)
     y = Tensor(y).to(device)
     x_p = iwmfdiff(x,lambda_0,sigma_y,s,batch_size,seed) # IWMFDiff
