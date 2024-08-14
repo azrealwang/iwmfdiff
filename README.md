@@ -58,7 +58,7 @@ pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
 
 The image name must satisfy `00000_0.jpg`. `00000` and `_0` indicates the image id and user id/class/label, respectively. The image id must be unique and auto-increment from `00000`. `.jpg` can be any image file format. 
 
-20 target and source images have been prepared for running [demos](#Demos-of-defending-Insightface).
+20 target and source images have been prepared in `imgs` for running [demos](#Usage).
 
 ## Pretrained Models
 
@@ -71,33 +71,29 @@ The image name must satisfy `00000_0.jpg`. `00000` and `_0` indicates the image 
 Sometimes, the download speed of denoising diffusion models is very slow. Then, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1ulkO2GFepl1IRlPjMRS_vsaVq5wG0p_x/view?usp=share_link) and prepare it as the path `exp/logs/celeba/celeba_hq.ckpt`.
 
 ## Usage
-### Demos of defending Insightface
-Without defense: `lambda_0=0` and `sigma_y=-1`
+### Regular attack
+```
+python attack.py --attack APGD --norm Linf --eps 0.03 --model insightface --thres 0.6351
+```
+### Purify adversarial examples
+```
+python defense.py --lambda_0 0.25 --sigma_y 0.15 --folder APGD-Linf-0.03-insightface-0.6131 --input imgs/adv --eval_adv --model insightface --thres 0.6351
+```
+### Purify genuie images
+```
+python defense.py --lambda_0 0.25 --sigma_y 0.15 --folder target --input imgs --eval_genuine --model insightface --thres 0.6351
+```
+### Adaptive attack
+```
+python attack.py --attack Adaptive --norm Linf --eps 0.03 --defense 0.25 0.15 --model insightface --thres 0.6351
+```
+where the following are partial options:
+- `--model` allows `facenet` or `insightface`
+- `--attack` allows `APGD` (white-box attack), `APGD_EOT` (adaptive attack), `Square` (black-box attack), or `Adaptive` (strong adaptive)'
+- `--eval_genuine` runs the task that computes FRR for genuine images before or after purification
+- `--eval_adv` runs the task that computes FAR and FRR for adv before or after purification
 
-```
-python main.py --lambda_0=0 --sigma_y=-1 --batch_deno=10 --thresh=0.6131 --log_name="noDefense"
-```
-IWMF: `lambda_0>0` and `sigma_y=-1`
-
-```
-python main.py --lambda_0=0.4 --sigma_y=-1 --batch_deno=10 --thresh=0.6611 --log_name="IWMF"
-```
-IWMF-Diff: `lambda_0>0` and `sigma_y>0`
-
-```
-python main.py --lambda_0=0.25 --sigma_y=0.15 --batch_deno=10 --thresh=0.6351 --log_name="IWMFDiff"
-```
-where the following are options:
-- `lambda_0` is the window amount; `0` indicates no blurring. (default: `0.25`)
-- `sigma_y` is the Gaussian standard deviation in [0,1]; `-1` indicates no denoising. (default: `0.15`)
-- `s` is the window size (px). (default: `3`)
-- `batch_deno` is the batch size for ddrm processing, depending on memory. (default: `1`)
-- `thresh` is the system threshold. (default: `0.6351`)
-- `log_name` is the log file name. (default: `"IWMFDiff"`)
-- `logs_path` is the path of log files. (default: `"logs"`)
-- `logs_path` is the path of output images; the processed adversarial examples are in the folder `adv/` and genuine images are in the folder `genuine/`. (default: `"outputs"`)
-
-### Implementation for pre-processing
+### Import for pre-processing
 ```
 from fuctions.defense import iwmfdiff
 ```
