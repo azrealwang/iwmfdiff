@@ -18,7 +18,7 @@ def parse_args_and_config():
     parser.add_argument('--norm', help='Linf, L2, or L1', type=str, default='Linf')
     parser.add_argument('--eps', help='attack budget', type=float, default=0.03)
     parser.add_argument('--seed', help='seed', type=int, default=None)
-    parser.add_argument('--defense', help='Defense setting only for Adaptive', type=int, nargs=2, default=None)
+    parser.add_argument('--defense', help='Defense setting only for Adaptive', type=float, nargs=2, default=None)
     # Model and Input
     parser.add_argument('--model', help='facenet or insightface', type=str, required=True)
     parser.add_argument('--thres', help='threshold', type=float, required=True)
