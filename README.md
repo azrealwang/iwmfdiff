@@ -22,9 +22,8 @@ Face authentication systems have brought significant convenience and advanced de
 ## Introduction
 The procedure of IWMF defending the authentication system is as follows:
 * Step 1: Blur the input image by IWMF. Perturbations on adversarial examples are largely removed, yet facial features are partially distorted.
-* Step 2: Further blur the image by Gaussian noise. This is essential for better restoration as DDRM is trained using Gaussian noise. Note that step 2 can be conducted using DDRM with step 3 together.
-* Step 3: Restore image by DDRM. Robustness against both genuine images and adversarial examples raises.
-* Step 4: Verify the pre-processed image by a regular authentication system. Note that users do not need to re-enroll due to the defense.
+* Step 2: Restore image by DDRM. Robustness against both genuine images and adversarial examples raises.
+* Step 3: Verify the pre-processed image by a regular authentication system. Note that users do not need to re-enroll due to the defense.
 
 <img src="figures/pipeline.jpg" alt="pipeline" style="width:500px;"/>
 
@@ -57,64 +56,15 @@ pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
 ```
 ## Data Preparation
 
-The image name must satisfy `00000_0.jpg`. `00000` and `_0` indicates the image id and user id/class/label, respectively. The image id must be unique and auto-increment from `00000`. `.jpg` can be any image file format.
+The image name must satisfy `00000_0.jpg`. `00000` and `_0` indicates the image id and user id/class/label, respectively. The image id must be unique and auto-increment from `00000`. `.jpg` can be any image file format. 
 
-<details>
-  <summary><mark><font color=darkred> Genuine/target images </font></mark></summary>
-  
-To evaluate the authentication accuracy, genuine/target images must be prepared in the folder `inputs/genuine/`.
-  
-```
-inputs
-|---genuine
-|     |---00000_0.jpg
-|     |---00001_0.jpg
-|     |......
-|     |---00009_1.jpg
-|     |---00010_1.jpg
-|     |......
-```
-</details>
-
-<details>
-  <summary><mark><font color=darkred> Adversarial examples </font></mark></summary>
-
-To evaluate the attack success rate, adversarial examples must be prepared in the folder `inputs/adv/`, which pair to genuine images.
-
-```
-inputs
-|---adv
-|     |---00000_0.jpg
-|     |---00001_0.jpg
-|     |......
-|     |---00009_1.jpg
-|     |---00010_1.jpg
-|     |......
-```
-</details>
-
-<details>
-  <summary><mark><font color=darkred> Source images </font></mark></summary>
-
-To evaluate the accuracy of classifying the adversarial examples as their true labels, source images must be prepared in the folder `inputs/source/`, which pair to adversarial examples.
-
-```
-inputs
-|---source
-|     |---00000_0.jpg
-|     |---00001_0.jpg
-|     |......
-|     |---00009_1.jpg
-|     |---00010_1.jpg
-|     |......
-```
-</details>
-
-20 input samples of each category have been prepared for running [demos](#Demos-of-defending-Insightface). The adversarial examples are produced by [SGADV](https://github.com/azrealwang/SGADV).
+20 target and source images have been prepared for running [demos](#Demos-of-defending-Insightface).
 
 ## Pretrained Models
 
 * [InsightFace](https://github.com/deepinsight/insightface): iresnet100 pretrained using the CASIA dataset; automatically downloaded
+
+* [FaceNet](https://github.com/timesler/facenet-pytorch): InceptionResnetV1 pretrained using the VGG2FACE dataset; automatically downloaded
 
 * [Denoising diffusion models](https://github.com/bahjat-kawar/ddrm): pretrained using the CelebA-HQ dataset; automatically downloaded
 
@@ -157,7 +107,8 @@ def iwmfdiff(
 	lambda_0: float,
 	sigma_y: float,
 	s: int = 3,
-	batch: int = 1
+	batch: int = 1,
+	seed: int = None,
 	) -> Tensor:
 ```
 
@@ -183,16 +134,15 @@ def iwmfdiff(
 | IWMF-Diff | 3.22 | 12.06 | 8.28 | 9.22 | 6.18 |
 
 ## Citation
-This work is under review by [ACM CCS 2023](https://www.sigsac.org/ccs/CCS2023/).
+This work has been accepted by IEEE Transactions on Dependable and Secure Computing.
 
 ## Acknowledgement
-This implementation is based on / inspired by:
-* [https://github.com/azrealwang/SGADV](https://github.com/azrealwang/SGADV) (adversarial examples generation)
-* [https://github.com/bahjat-kawar/ddrm](https://github.com/bahjat-kawar/ddrm) (image restoration)
-* [https://github.com/deepinsight/insightface](https://github.com/deepinsight/insightface) (deep learning model for face recognition)
+The implementation is partially inspired by:
+* [AutoAttack](https://github.com/fra31/auto-attack) (adversarial examples generation)
+* [DDRM](https://github.com/bahjat-kawar/ddrm) (image restoration)
 
 ## Contacts
 If you have any questions about our work, please do not hesitate to contact us by email.
 
-Hanrui Wang: hanrui.wang@monash.edu
+Hanrui Wang: hanrui_wang@nii.ac.jp
 
