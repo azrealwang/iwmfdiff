@@ -92,6 +92,7 @@ where the following are partial options:
 - `--attack` allows `APGD` (white-box attack), `APGD_EOT` (adaptive attack), `Square` (black-box attack), or `Adaptive` (strong adaptive)
 - `--eval_genuine` runs the task that computes FRR for genuine images before or after purification
 - `--eval_adv` runs the task that computes FAR and FRR for adv before or after purification
+
 Other options refer to `--help`
 
 ### Import for pre-processing
