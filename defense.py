@@ -17,8 +17,8 @@ def parse_args_and_config():
     # Input and Output
     parser.add_argument('--folder', help='input folder name', type=str, required=True)
     parser.add_argument('--input', help='input folder path, excluding folder name', type=str, required=True)
-    parser.add_argument('--input_target', help='target image path', type=str, default='imgs/target/lfw')
-    parser.add_argument('--input_source', help='source image path', type=str, default='imgs/source/lfw')
+    parser.add_argument('--input_target', help='target image path', type=str, default='imgs/target/')
+    parser.add_argument('--input_source', help='source image path', type=str, default='imgs/source/')
     parser.add_argument('--output', help='purified image path', type=str, default='imgs/purified')
     # evaluation
     parser.add_argument('--eval_genuine', help='compute FRR for genuine before or after purification', action='store_true')
