@@ -1,12 +1,8 @@
-# Iterative Window Mean Filter: A New Image Filter Changes Diffusion-based Adversarial Purification
+# Iterative Window Mean Filter: Thwarting Diffusion-based Adversarial Purification
 
-Hanrui Wang<sup>1</sup>, Shuo Wang<sup>2</sup>, Cunjian Chen<sup>1</sup>, Zhe Jin<sup>3</sup>, Soon Lay Ki<sup>1</sup>
+Hanrui Wang, Ruoxi Sun, Cunjian Chen, Minhui Xue, Lay-Ki Soon, Shuo Wang, Zhe Jin
 
-<sup>1</sup> Monash University, <sup>2</sup> CSIRO, <sup>3</sup>Anhui Univeristy
-
-The majority of adversarial attack techniques perform well against deep face recognition when the full knowledge of the system is revealed (white-box). However, such techniques act unsuccessfully in the gray-box setting where the face templates are unknown to the attackers. In this work, we propose a similarity-based gray-box adversarial attack (SGADV) technique.
-
-<img src="figures/samples.jpg" alt="samples" style="width:400px;"/>
+Face authentication systems have brought significant convenience and advanced developments, yet they have become unreliable due to their sensitivity to inconspicuous perturbations, such as adversarial attacks. Existing defenses often exhibit weaknesses when facing various attack algorithms and adaptive attacks or compromise accuracy for enhanced security. To address these challenges, we have developed a novel and highly efficient non-deep-learning-based image filter called the Iterative Window Mean Filter (IWMF) and proposed a new framework for adversarial purification, named IWMF-Diff, which integrates IWMF and denoising diffusion models. These methods can function as pre-processing modules to eliminate adversarial perturbations without necessitating further modifications or retraining of the target system. We demonstrate that our proposed methodologies fulfill four critical requirements: preserved accuracy, improved security, generalizability to various threats in different settings, and better resistance to adaptive attacks. This performance surpasses that of the state-of-the-art adversarial purification method, DiffPure.
 
 ****
 ## Contents
@@ -34,12 +30,12 @@ The procedure of IWMF defending the authentication system is as follows:
 
 ## Main Requirements
 
-  * **Python (3.9.13)**
-  * **torch (1.13.1+cu116)**
-  * **torchvision (0.14.1+cu116)**
-  * **eagerpy (0.30.0)**
-  * **PyYAML (6.0)**
-  * **tqdm (4.64.1)**
+  * **Python (3.9.18)**
+  * **torch (2.1.2+cu118)**
+  * **torchvision (0.16.2+cu118)**
+  * **PyYAML (6.0.1)**
+  * **tqdm (4.66.2)**
+  * **facenet-pytorch (2.5.3)**
   
   The versions in `()` have been tested.
 
@@ -52,12 +48,12 @@ pip3 install -r requirements.txt
 if equipped with GPU:
 
 ```
-pip3 install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu116
+pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu118
 ```
 or:
 
 ```
-pip3 install torch torchvision
+pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
 ```
 ## Data Preparation
 
