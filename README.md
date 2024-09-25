@@ -123,6 +123,14 @@ def iwmfdiff(
 
 ## Citation
 This work has been accepted by IEEE Transactions on Dependable and Secure Computing.
+```
+@article{wang2024iterative,
+  title={Iterative Window Mean Filter: Thwarting Diffusion-based Adversarial Purification},
+  author={Wang, Hanrui and Sun, Ruoxi and Chen, Cunjian and Xue, Minhui and Soon, Lay-Ki and Wang, Shuo and Jin, Zhe},
+  journal={arXiv preprint arXiv:2408.10673},
+  year={2024}
+}
+```
 
 ## Acknowledgement
 The implementation is partially inspired by:
