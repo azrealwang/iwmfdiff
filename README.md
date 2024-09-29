@@ -79,7 +79,7 @@ python attack.py --attack APGD --norm Linf --eps 0.03 --model insightface --thre
 ```
 ### Purify adversarial examples
 ```
-python defense.py --lambda_0 0.25 --sigma_y 0.15 --folder APGD-Linf-0.03-insightface-0.6131 --input imgs/adv --eval_adv --model insightface --thres 0.6351
+python defense.py --lambda_0 0.25 --sigma_y 0.15 --folder APGD-Linf-0.03-insightface-0.6351 --input imgs/adv --eval_adv --model insightface --thres 0.6351
 ```
 ### Purify genuie images
 ```
