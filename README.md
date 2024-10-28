@@ -6,6 +6,8 @@ Hanrui Wang, Ruoxi Sun, Cunjian Chen, Minhui Xue, Lay-Ki Soon, Shuo Wang, Zhe Ji
 
 Face authentication systems have brought significant convenience and advanced developments, yet they have become unreliable due to their sensitivity to inconspicuous perturbations, such as adversarial attacks. Existing defenses often exhibit weaknesses when facing various attack algorithms and adaptive attacks or compromise accuracy for enhanced security. To address these challenges, we have developed a novel and highly efficient non-deep-learning-based image filter called the Iterative Window Mean Filter (IWMF) and proposed a new framework for adversarial purification, named IWMF-Diff, which integrates IWMF and denoising diffusion models. These methods can function as pre-processing modules to eliminate adversarial perturbations without necessitating further modifications or retraining of the target system. We demonstrate that our proposed methodologies fulfill four critical requirements: preserved accuracy, improved security, generalizability to various threats in different settings, and better resistance to adaptive attacks. This performance surpasses that of the state-of-the-art adversarial purification method, DiffPure.
 
+* This is also an unofficial implemntation of [DuffPure](https://github.com/NVlabs/DiffPure) for face recognition, CIFAR-10, and ImageNet.
+
 ****
 ## Contents
 * [Introduction](#Introduction)
@@ -109,8 +111,16 @@ def iwmfdiff(
 	s: int = 3,
 	batch: int = 1,
 	seed: int = None,
+	data: str = 'celeba_hq', # option for celeba_hq, cifar10, imagenet_256
 	) -> Tensor:
 ```
+
+### CIFAR-10 and ImageNet
+
+For CIFAR-10 and ImageNet, if the downloading is slow, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1ulkO2GFepl1IRlPjMRS_vsaVq5wG0p_x/view?usp=share_link) and prepare it as the path:
+* CIFAR-10: `exp/logs/diffusion_models_converted/ema_diffusion_cifar10_model/model-790000.ckpt`
+* ImageNet: `exp/logs/imagenet/256x256_diffusion_uncond.pt`
+
 
 ## Results (%)
 
