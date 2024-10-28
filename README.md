@@ -72,7 +72,7 @@ The image name must satisfy `00000_0.jpg`. `00000` and `_0` indicates the image 
 
 * [Denoising diffusion models](https://github.com/bahjat-kawar/ddrm): pretrained using the CelebA-HQ dataset; automatically downloaded
 
-Sometimes, the download speed of denoising diffusion models is very slow. Then, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1ulkO2GFepl1IRlPjMRS_vsaVq5wG0p_x/view?usp=share_link) and prepare it as the path `exp/logs/celeba/celeba_hq.ckpt`.
+Sometimes, the download speed of denoising diffusion models is very slow. Then, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1LeawZE7MKtrr0l-4_UOufiMykORy_MA1/view?usp=share_link) and prepare it as the path `exp/logs/celeba/celeba_hq.ckpt`.
 
 ## Usage
 ### Regular attack
@@ -117,7 +117,7 @@ def iwmfdiff(
 
 ### CIFAR-10 and ImageNet
 
-For CIFAR-10 and ImageNet, if the downloading is slow, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1ulkO2GFepl1IRlPjMRS_vsaVq5wG0p_x/view?usp=share_link) and prepare it as the path:
+For CIFAR-10 and ImageNet, if the downloading is slow, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1LeawZE7MKtrr0l-4_UOufiMykORy_MA1/view?usp=share_link) and prepare it as the path:
 * CIFAR-10: `exp/logs/diffusion_models_converted/ema_diffusion_cifar10_model/model-790000.ckpt`
 * ImageNet: `exp/logs/imagenet/256x256_diffusion_uncond.pt`
 
