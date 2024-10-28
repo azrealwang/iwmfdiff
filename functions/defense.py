@@ -18,6 +18,7 @@ def iwmfdiff(
         s: int = 3,
         batch: int = 1,
         seed: int = None,
+        data: str = 'celeba_hq', # option for celeba_hq, cifar10, imagenet_256
         ) -> Tensor:
     if seed is not None:
         np.random.seed(seed)
@@ -27,8 +28,11 @@ def iwmfdiff(
     imgs = iwmf(imgs_input,lambda_0,s)
     if sigma_y>0:
         print("**********************denoising images******************************")
-        imgs = imgs_resize(imgs,(256,256))
-        imgs = ddrm(imgs,batch=batch,sigma_0=sigma_y)
+        if data == 'cifar10':
+            imgs = imgs_resize(imgs,(32,32))
+        else:
+            imgs = imgs_resize(imgs,(256,256))
+        imgs = ddrm(imgs,batch=batch,sigma_0=sigma_y,data=data)
         imgs = Tensor(imgs_resize(imgs,(h,w)))
     
     return imgs
@@ -56,12 +60,21 @@ def ddrm(
         timesteps: int = 20, # default 20
         sigma_0: float = 0.1, # default 0.1
         batch: int = 1,
-        config_name: str = "celeba_hq.yml",
+        #config_name: str = "celeba_hq.yml",
         exp: str = "exp",
         deg: str = "deno",
+        data: str = 'celeba_hq',
         ) -> Tensor:
         # load config
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        if data == 'celeba_hq':
+            config_name: str = "celeba_hq.yml"
+        elif data == 'cifar10':
+            config_name: str = "cifar10.yml"
+        elif data == 'imagenet_256':
+            config_name: str = "imagenet_256.yml"
+        else:
+            raise ValueError
         img = img.to(device)
         with open(os.path.join("configs", config_name), "r") as f:
             config_tmp = yaml.safe_load(f)
