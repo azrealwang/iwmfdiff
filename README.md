@@ -2,7 +2,7 @@
 
 Hanrui Wang, Ruoxi Sun, Cunjian Chen, Minhui Xue, Lay-Ki Soon, Shuo Wang, Zhe Jin
 
-[arXiv](https://arxiv.org/abs/2408.10673) | [PDF](https://arxiv.org/pdf/2408.10673)
+[Publication](https://ieeexplore.ieee.org/abstract/document/10704070) | [PDF](https://arxiv.org/pdf/2408.10673)
 
 Face authentication systems have brought significant convenience and advanced developments, yet they have become unreliable due to their sensitivity to inconspicuous perturbations, such as adversarial attacks. Existing defenses often exhibit weaknesses when facing various attack algorithms and adaptive attacks or compromise accuracy for enhanced security. To address these challenges, we have developed a novel and highly efficient non-deep-learning-based image filter called the Iterative Window Mean Filter (IWMF) and proposed a new framework for adversarial purification, named IWMF-Diff, which integrates IWMF and denoising diffusion models. These methods can function as pre-processing modules to eliminate adversarial perturbations without necessitating further modifications or retraining of the target system. We demonstrate that our proposed methodologies fulfill four critical requirements: preserved accuracy, improved security, generalizability to various threats in different settings, and better resistance to adaptive attacks. This performance surpasses that of the state-of-the-art adversarial purification method, DiffPure.
 
@@ -121,7 +121,6 @@ For CIFAR-10 and ImageNet, if the downloading is slow, please manually download 
 * CIFAR-10: `exp/logs/diffusion_models_converted/ema_diffusion_cifar10_model/model-790000.ckpt`
 * ImageNet: `exp/logs/imagenet/256x256_diffusion_uncond.pt`
 
-
 ## Results (%)
 
 | Defense | FRR-Genuie | FAR-APGD | FAR-APGD_EOT | FAR-Square | FAR-Adaptive | Time Cost (s) |
@@ -132,13 +131,13 @@ For CIFAR-10 and ImageNet, if the downloading is slow, please manually download 
 | IWMF-Diff | 3.22 | 6.6 | 5.0 | 19.8 | 77.4 | 3.79 |
 
 ## Citation
-This work has been accepted by IEEE Transactions on Dependable and Secure Computing.
 ```
 @article{wang2024iterative,
   title={Iterative Window Mean Filter: Thwarting Diffusion-based Adversarial Purification},
   author={Wang, Hanrui and Sun, Ruoxi and Chen, Cunjian and Xue, Minhui and Soon, Lay-Ki and Wang, Shuo and Jin, Zhe},
-  journal={arXiv preprint arXiv:2408.10673},
-  year={2024}
+  journal={IEEE Transactions on Dependable and Secure Computing},
+  year={2024},
+  publisher={IEEE}
 }
 ```
 
