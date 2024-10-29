@@ -8,20 +8,39 @@ from torchvision.utils import save_image, make_grid
 from PIL import Image
 from math import ceil
 
-def imgs_resize(imgs,shape):
-    l,_,_,_ = imgs.shape
-    images = []
-    for idx in range(l):
-        grid = make_grid(imgs[idx])
-        ndarr = grid.mul(255).add_(0.5).clamp_(0, 255).permute(1, 2, 0).to('cpu', torch.uint8).numpy()
-        im = Image.fromarray(ndarr)
-        im = im.resize(shape)
-        image = np.asarray(im, dtype=np.float32)
-        image = np.transpose(image, (2, 0, 1))
-        images.append(image)
-    images = Tensor(np.divide(images,255))
+# def imgs_resize(
+#         imgs: Tensor,
+#         shape: Tuple[int, int],
+#         ) -> Tensor:
+#     import torch.nn.functional as F
+#     images = F.interpolate(imgs, size=shape, mode='bilinear', align_corners=False)
+    
+#     return images
+
+def imgs_resize(
+        imgs: Tensor,
+        shape: Tuple[int, int],
+        ) -> Tensor:
+    from torchvision.transforms import Resize
+    transform = Resize(shape,antialias=True)
+    images = transform(imgs)
     
     return images
+
+# def imgs_resize(imgs,shape):
+#     l,_,_,_ = imgs.shape
+#     images = []
+#     for idx in range(l):
+#         grid = make_grid(imgs[idx])
+#         ndarr = grid.mul(255).add_(0.5).clamp_(0, 255).permute(1, 2, 0).to('cpu', torch.uint8).numpy()
+#         im = Image.fromarray(ndarr)
+#         im = im.resize(shape)
+#         image = np.asarray(im, dtype=np.float32)
+#         image = np.transpose(image, (2, 0, 1))
+#         images.append(image)
+#     images = Tensor(np.divide(images,255))
+    
+#     return images
 
 def save_all_images(
         imgs: Any,
