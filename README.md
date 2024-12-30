@@ -117,7 +117,9 @@ def iwmfdiff(
 
 ### CIFAR-10 and ImageNet
 
-For CIFAR-10 and ImageNet, if the downloading is slow, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1LeawZE7MKtrr0l-4_UOufiMykORy_MA1/view?usp=share_link) and prepare it as the path:
+The defense settings (i.e., lambda_0 and sigma_y) should to be determined accroding to trade-off between clean and robust accuracy.
+
+If the downloading is slow, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1LeawZE7MKtrr0l-4_UOufiMykORy_MA1/view?usp=share_link) and prepare it as the path:
 * CIFAR-10: `exp/logs/diffusion_models_converted/ema_diffusion_cifar10_model/model-790000.ckpt`
 * ImageNet: `exp/logs/imagenet/256x256_diffusion_uncond.pt`
 
