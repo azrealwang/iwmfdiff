@@ -42,7 +42,7 @@ The procedure of IWMF defending the authentication system is as follows:
   
   The versions in `()` have been tested.
 
-## Installation
+<!-- ## Installation
 ```
 git clone https://github.com/azrealwang/iwmfdiff.git
 cd iwmfdiff
@@ -57,7 +57,47 @@ or:
 
 ```
 pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
+``` -->
+## Installation
+
+This guide assumes you have an empty Python environment (3.9+) activated. `iwmfdiff` supports both CPU and GPU (CUDA) usage.
+
+#### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/azrealwang/iwmfdiff.git
+cd iwmfdiff
 ```
+
+#### Step 2: Install with CUDA (GPU) or CPU spoort
+
+* For GPU (CUDA 11.8):
+
+```bash
+pip install torch==2.1.2+cu118 torchvision==0.16.2+cu118 -f https://download.pytorch.org/whl/torch_stable.html
+pip install - e.
+```
+
+* For CPU Only:
+
+```bash
+pip install - e.
+```
+
+#### Step 3: Verify Installation
+
+```bash
+python -c "import torch; print(torch.__version__)"  # Should be 2.1.2+cu118 if pre-installed
+python -c "import numpy; print(numpy.__version__)"  # Should be <2, e.g., 1.26.4
+python -c "import iwmfdiff; print(iwmfdiff.__version__)"  # Should print: 0.1.0
+python -c "import torch; print(torch.cuda.is_available())"  # True if CUDA installed
+```
+
+#### Notes
+
+* CUDA requires a compatible toolkit (e.g., 11.8). Check with `nvcc --version`.
+* If NumPy 2.x issues arise, ensure `numpy<2` is used (`pip install "numpy<2"`).
+
 ## Data Preparation
 
 The image name must satisfy `00000_0.jpg`. `00000` and `_0` indicates the image id and user id/class/label, respectively. The image id must be unique and auto-increment from `00000`. `.jpg` can be any image file format. 

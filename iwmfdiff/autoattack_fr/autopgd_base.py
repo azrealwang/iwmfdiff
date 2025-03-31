@@ -376,7 +376,7 @@ class APGDAttack():
                 x_adv = x_adv_1 + 0.
             
             if self.adaptive:
-                from functions.defense import iwmfdiff
+                from iwmfdiff.defense import iwmfdiff
                 x_purified = iwmfdiff(x_adv, self.defense[0], self.defense[1], 3, len(x_adv), self.seed_0).to(self.device)
             else:
                 x_purified = x_adv.clone()

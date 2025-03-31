@@ -1,0 +1,32 @@
+[build-system]
+requires = [
+    "setuptools>=64.0.0",  # Minimum version for PEP 660 editable installs
+    "wheel"                # Required for building wheels
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iwmfdiff"
+version = "0.1.0"
+description = "A package for image processing with diffusion models"
+authors = [{name = "Hanrui Wang"}]
+requires-python = ">=3.9"
+dependencies = [
+    "numpy<2",
+    "torch==2.1.2",         # Base version, CUDA variant should be pre-installed
+    "torchvision==0.16.2",  # Base version, CUDA variant should be pre-installed
+    "PyYAML==6.0.1",
+    "tqdm==4.66.2",
+    "facenet-pytorch==2.5.3"
+]
+urls = {Homepage = "https://github.com/azrealwang/iwmfdiff"}
+
+[tool.setuptools]
+packages = {find = {exclude = ["scripts"]}}
+package-data = {"iwmfdiff" = ["configs/*.yml"]}
+
+[project.optional-dependencies]
+cuda = [
+    "torch==2.1.2+cu118",
+    "torchvision==0.16.2+cu118"
+]

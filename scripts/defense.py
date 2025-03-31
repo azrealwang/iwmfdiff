@@ -1,9 +1,9 @@
 import argparse
 import torch
 from torch import Tensor
-from functions.utils import save_all_images, load_samples
-from functions.defense import iwmfdiff
-from evaluation import evaluate
+from iwmfdiff.utils import save_all_images, load_samples
+from iwmfdiff.defense import iwmfdiff
+from scripts.evaluation import evaluate
 
 
 def parse_args_and_config():
