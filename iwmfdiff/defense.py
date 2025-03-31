@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+from importlib.resources import files
 import numpy as np
 import math
 import torch
@@ -10,6 +12,14 @@ from .ddrm.functions.denoising import efficient_generalized_steps, get_beta_sche
 from .ddrm.functions.ckpt_util import get_ckpt_path, download
 from .ddrm.models import diffusion
 from .ddrm.guided_diffusion.script_util import create_model
+
+# Define the package-relative exp directory
+PACKAGE_ROOT = Path(__file__).parent.parent  # Points to iwmfdiff/
+EXP_DIR = PACKAGE_ROOT / "exp"
+# # Use user cache directory
+# CACHE_DIR = Path.home() / ".cache" / "iwmfdiff"
+# EXP_DIR = CACHE_DIR / "exp"
+EXP_DIR.mkdir(exist_ok=True)  # Create exp directory if it doesn’t exist
 
 def iwmfdiff(
         imgs_input: Tensor,
@@ -61,7 +71,7 @@ def ddrm(
         sigma_0: float = 0.1, # default 0.1
         batch: int = 1,
         #config_name: str = "celeba_hq.yml",
-        exp: str = "exp",
+        exp: str = "exp",  # deprecated
         deg: str = "deno",
         data: str = 'celeba_hq',
         ) -> Tensor:
@@ -76,7 +86,9 @@ def ddrm(
         else:
             raise ValueError
         img = img.to(device)
-        with open(os.path.join("configs", config_name), "r") as f:
+        # with open(os.path.join("configs", config_name), "r") as f:
+        config_path = files('iwmfdiff.configs').joinpath(config_name)
+        with config_path.open('r') as f:
             config_tmp = yaml.safe_load(f)
         config = dict2namespace(config_tmp)
         config.device = device
@@ -110,13 +122,16 @@ def ddrm(
             else:
                 raise ValueError
             if name != 'celeba_hq':
-                ckpt = get_ckpt_path(f"ema_{name}", prefix=exp)
+                ckpt = get_ckpt_path(f"ema_{name}", prefix=str(EXP_DIR))
                 print("Loading checkpoint {}".format(ckpt))
             elif name == 'celeba_hq':
                 #ckpt = '~/.cache/diffusion_models_converted/celeba_hq.ckpt'
-                ckpt = os.path.join(exp, "logs/celeba/celeba_hq.ckpt")
-                if not os.path.exists(ckpt):
-                    download('https://huggingface.co/gwang-kim/DiffusionCLIP-CelebA_HQ/resolve/main/celeba_hq.ckpt', ckpt)
+                # ckpt = os.path.join(exp, "logs/celeba/celeba_hq.ckpt")
+                ckpt = EXP_DIR / "logs/celeba/celeba_hq.ckpt"
+                # if not os.path.exists(ckpt):
+                if not ckpt.exists():
+                    ckpt.parent.mkdir(parents=True, exist_ok=True)
+                    download('https://image-editing-test-12345.s3-us-west-2.amazonaws.com/checkpoints/celeba_hq.ckpt', ckpt)
             else:
                 raise ValueError
 
@@ -131,12 +146,18 @@ def ddrm(
             if config.model.use_fp16:
                 model.convert_to_fp16()
             if config.model.class_cond:
-                ckpt = os.path.join(exp, 'logs/imagenet/%dx%d_diffusion.pt' % (config.data.image_size, config.data.image_size))
-                if not os.path.exists(ckpt):
+                # ckpt = os.path.join(exp, 'logs/imagenet/%dx%d_diffusion.pt' % (config.data.image_size, config.data.image_size))
+                ckpt = EXP_DIR / f"logs/imagenet/{config.data.image_size}x{config.data.image_size}_diffusion.pt"
+                # if not os.path.exists(ckpt):
+                if not ckpt.exists():
+                    ckpt.parent.mkdir(parents=True, exist_ok=True)
                     download('https://openaipublic.blob.core.windows.net/diffusion/jul-2021/%dx%d_diffusion_uncond.pt' % (config.data.image_size, config.data.image_size), ckpt)
             else:
-                ckpt = os.path.join(exp, "logs/imagenet/256x256_diffusion_uncond.pt")
-                if not os.path.exists(ckpt):
+                # ckpt = os.path.join(exp, "logs/imagenet/256x256_diffusion_uncond.pt")
+                ckpt = EXP_DIR / "logs/imagenet/256x256_diffusion_uncond.pt"
+                # if not os.path.exists(ckpt):
+                if not ckpt.exists():
+                    ckpt.parent.mkdir(parents=True, exist_ok=True)
                     download('https://openaipublic.blob.core.windows.net/diffusion/jul-2021/256x256_diffusion_uncond.pt', ckpt)
                 
             model.load_state_dict(torch.load(ckpt, map_location=device))
