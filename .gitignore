@@ -1,7 +1,10 @@
 .DS_Store
-__pycache__/
+# __pycache__/
+**__pycache__/
+.mypy_cache/
 exp
 checkpoint
 face_eigen
 logs
 notSubmit
+

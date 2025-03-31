@@ -1,8 +1,5 @@
 [build-system]
-requires = [
-    "setuptools>=64.0.0",  # Minimum version for PEP 660 editable installs
-    "wheel"                # Required for building wheels
-]
+requires = ["setuptools>=64.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -13,8 +10,8 @@ authors = [{name = "Hanrui Wang"}]
 requires-python = ">=3.9"
 dependencies = [
     "numpy<2",
-    "torch==2.1.2",         # Base version, CUDA variant should be pre-installed
-    "torchvision==0.16.2",  # Base version, CUDA variant should be pre-installed
+    "torch==2.1.2",
+    "torchvision==0.16.2",
     "PyYAML==6.0.1",
     "tqdm==4.66.2",
     "facenet-pytorch==2.5.3"
@@ -22,7 +19,7 @@ dependencies = [
 urls = {Homepage = "https://github.com/azrealwang/iwmfdiff"}
 
 [tool.setuptools]
-packages = {find = {exclude = ["scripts"]}}
+packages = {find = {where = ["src"], exclude = ["scripts"]}}
 package-data = {"iwmfdiff" = ["configs/*.yml"]}
 
 [project.optional-dependencies]
