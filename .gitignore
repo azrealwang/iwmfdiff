@@ -3,6 +3,7 @@
 **__pycache__/
 .mypy_cache/
 exp
+**exp/
 checkpoint
 face_eigen
 logs
