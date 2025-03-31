@@ -1,0 +1,10 @@
+numpy<2
+torch==2.1.2
+torchvision==0.16.2
+PyYAML==6.0.1
+tqdm==4.66.2
+facenet-pytorch==2.5.3
+
+[cuda]
+torch==2.1.2+cu118
+torchvision==0.16.2+cu118
