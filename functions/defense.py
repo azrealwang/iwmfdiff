@@ -116,7 +116,7 @@ def ddrm(
                 #ckpt = '~/.cache/diffusion_models_converted/celeba_hq.ckpt'
                 ckpt = os.path.join(exp, "logs/celeba/celeba_hq.ckpt")
                 if not os.path.exists(ckpt):
-                    download('https://image-editing-test-12345.s3-us-west-2.amazonaws.com/checkpoints/celeba_hq.ckpt', ckpt)
+                    download('https://huggingface.co/gwang-kim/DiffusionCLIP-CelebA_HQ/resolve/main/celeba_hq.ckpt', ckpt)
             else:
                 raise ValueError
 
