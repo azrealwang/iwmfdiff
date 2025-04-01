@@ -42,7 +42,7 @@ The procedure of IWMF defending the authentication system is as follows:
   
   The versions in `()` have been tested.
 
-## Installation
+<!-- ## Installation
 ```
 git clone https://github.com/azrealwang/iwmfdiff.git
 cd iwmfdiff
@@ -57,7 +57,47 @@ or:
 
 ```
 pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
+``` -->
+## Installation
+
+This guide assumes you have an empty Python environment (3.9+) activated. `iwmfdiff` supports both CPU and GPU (CUDA) usage.
+
+#### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/azrealwang/iwmfdiff.git
+cd iwmfdiff
 ```
+
+#### Step 2: Install with CUDA (GPU) or CPU spoort
+
+* For GPU (CUDA 11.8):
+
+```bash
+pip install torch==2.1.2+cu118 torchvision==0.16.2+cu118 -f https://download.pytorch.org/whl/torch_stable.html
+pip install -e .
+```
+
+* For CPU Only:
+
+```bash
+pip install -e .
+```
+
+#### Step 3: Verify Installation
+
+```bash
+python -c "import torch; print(torch.__version__)"  # Should be 2.1.2+cu118 if pre-installed
+python -c "import numpy; print(numpy.__version__)"  # Should be <2, e.g., 1.26.4
+python -c "import iwmfdiff; print(iwmfdiff.__version__)"  # Should print: 0.1.0
+python -c "import torch; print(torch.cuda.is_available())"  # True if CUDA installed
+```
+
+#### Notes
+
+* CUDA requires a compatible toolkit (e.g., 11.8). Check with `nvcc --version`.
+* If NumPy 2.x issues arise, ensure `numpy<2` is used (`pip install "numpy<2"`).
+
 ## Data Preparation
 
 The image name must satisfy `00000_0.jpg`. `00000` and `_0` indicates the image id and user id/class/label, respectively. The image id must be unique and auto-increment from `00000`. `.jpg` can be any image file format. 
@@ -75,22 +115,29 @@ The image name must satisfy `00000_0.jpg`. `00000` and `_0` indicates the image 
 Sometimes, the download speed of denoising diffusion models is very slow. Then, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1LeawZE7MKtrr0l-4_UOufiMykORy_MA1/view?usp=share_link) and prepare it as the path `exp/logs/celeba/celeba_hq.ckpt`.
 
 ## Usage
+
+After installing the package (e.g., `pip install -e .`), you can use the provided command-line tools to perform attacks, purifications, and evaluations. These tools are available as console scripts, allowing you to run `iwmf-attack`, `iwmf-defense`, and `iwmf-eval` directly instead of invoking python with the script paths.
+
 ### Regular attack
 ```
-python attack.py --attack APGD --norm Linf --eps 0.03 --model insightface --thres 0.6351
+iwmf-attack --attack APGD --norm Linf --eps 0.03 --model insightface --thres 0.6351
 ```
+_(Previously: `python attack.py ...`)_
 ### Purify adversarial examples
 ```
-python defense.py --lambda_0 0.25 --sigma_y 0.15 --folder APGD-Linf-0.03-insightface-0.6351 --input imgs/adv --eval_adv --model insightface --thres 0.6351
+iwmf-defense --lambda_0 0.25 --sigma_y 0.15 --folder APGD-Linf-0.03-insightface-0.6351 --input imgs/adv --eval_adv --model insightface --thres 0.6351
 ```
-### Purify genuie images
+_(Previously: `python defense.py ...`)_
+### Purify genuine images
 ```
-python defense.py --lambda_0 0.25 --sigma_y 0.15 --folder target --input imgs --eval_genuine --model insightface --thres 0.6351
+iwmf-defense --lambda_0 0.25 --sigma_y 0.15 --folder target --input imgs --eval_genuine --model insightface --thres 0.6351
 ```
+(Previously: `python defense.py ...`)_
 ### Adaptive attack
 ```
-python attack.py --attack Adaptive --norm Linf --eps 0.03 --defense 0.25 0.15 --model insightface --thres 0.6351
+iwmf-attack --attack Adaptive --norm Linf --eps 0.03 --defense 0.25 0.15 --model insightface --thres 0.6351
 ```
+_(Previously: `python attack.py ...`)_
 where the following are partial options:
 - `--model` allows `facenet` or `insightface`
 - `--attack` allows `APGD` (white-box attack), `APGD_EOT` (adaptive attack), `Square` (black-box attack), or `Adaptive` (strong adaptive)
@@ -99,11 +146,15 @@ where the following are partial options:
 
 Other options refer to `--help`
 
+#### Notes
+
+* __Console Scripts__: The commands `iwmf-attack` and `iwmf-defense` are provided via the `[project.scripts]` section in `pyproject.toml`. This simplifies usage by eliminating the need to prepend `python` and specify script paths. Ensure the package is installed (`pip install -e .`) to use these commands.
+
 ### Import for pre-processing
 ```
-from fuctions.defense import iwmfdiff
+from functions.defense import iwmfdiff
 ```
-```
+```python
 def iwmfdiff(
 	imgs_input: Tensor,
 	lambda_0: float,

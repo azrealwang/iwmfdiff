@@ -12,9 +12,9 @@ import torch.nn.functional as F
 import math
 import random
 
-from autoattack.other_utils import L0_norm, L1_norm, L2_norm
-from autoattack.checks import check_zero_gradients
-from functions.utils import cos_similarity_score
+from .other_utils import L0_norm, L1_norm, L2_norm
+from .checks import check_zero_gradients
+from iwmfdiff.utils import cos_similarity_score
 
 
 def L1_projection(x2, y2, eps1):
@@ -376,7 +376,7 @@ class APGDAttack():
                 x_adv = x_adv_1 + 0.
             
             if self.adaptive:
-                from functions.defense import iwmfdiff
+                from iwmfdiff.defense import iwmfdiff
                 x_purified = iwmfdiff(x_adv, self.defense[0], self.defense[1], 3, len(x_adv), self.seed_0).to(self.device)
             else:
                 x_purified = x_adv.clone()

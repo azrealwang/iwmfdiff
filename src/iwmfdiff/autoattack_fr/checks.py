@@ -3,7 +3,7 @@ import warnings
 import math
 import sys
 
-from autoattack.other_utils import L2_norm
+from .other_utils import L2_norm
 
 
 funcs = {'grad': 0,
