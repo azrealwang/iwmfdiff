@@ -154,7 +154,7 @@ Other options refer to `--help`
 ```
 from functions.defense import iwmfdiff
 ```
-```
+```python
 def iwmfdiff(
 	imgs_input: Tensor,
 	lambda_0: float,
