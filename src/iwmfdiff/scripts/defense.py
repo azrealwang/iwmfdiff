@@ -3,7 +3,7 @@ import torch
 from torch import Tensor
 from iwmfdiff.utils import save_all_images, load_samples
 from iwmfdiff.defense import iwmfdiff
-from scripts.evaluation import evaluate
+from .evaluation import evaluate
 
 
 def parse_args_and_config():

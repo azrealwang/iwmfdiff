@@ -148,7 +148,7 @@ Other options refer to `--help`
 
 #### Notes
 
-* __Console Scripts__: The commands `iwmf-attack`, `iwmf-defense`, and `iwmf-eval` are provided via the `[project.scripts]` section in `pyproject.toml`. This simplifies usage by eliminating the need to prepend `python` and specify script paths. Ensure the package is installed (`pip install -e .`) to use these commands.
+* __Console Scripts__: The commands `iwmf-attack` and `iwmf-defense` are provided via the `[project.scripts]` section in `pyproject.toml`. This simplifies usage by eliminating the need to prepend `python` and specify script paths. Ensure the package is installed (`pip install -e .`) to use these commands.
 
 ### Import for pre-processing
 ```

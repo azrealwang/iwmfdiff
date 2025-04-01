@@ -22,7 +22,6 @@ urls = {Homepage = "https://github.com/azrealwang/iwmfdiff"}
 [project.scripts]
 iwmf-attack = "iwmfdiff.scripts.attack:main"
 iwmf-defense = "iwmfdiff.scripts.defense:main"
-iwmf-eval = "iwmfdiff.scripts.evaluation:main"
 
 [tool.setuptools]
 packages = {find = {where = ["src"]}}
