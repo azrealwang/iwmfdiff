@@ -59,7 +59,7 @@ def iwmfdiff(
         np.random.seed(seed)
         torch.random.manual_seed(seed)
         torch.cuda.random.manual_seed(seed)
-    _,_,h,w = imgs_input.shape
+    _, _, h, w = imgs_input.shape
     imgs = iwmf(imgs_input, lambda_0, s)
     device = obtain_device(device)
     imgs = imgs.to(device)
@@ -72,7 +72,7 @@ def iwmfdiff(
         else:
             imgs = imgs_resize(imgs,(256,256))
         imgs = ddrm(imgs, batch=batch, sigma_0=sigma_y, data=data, timesteps=timesteps, device=device, verbose=verbose)
-        imgs = Tensor(imgs_resize(imgs,(h,w)))
+        imgs = Tensor(imgs_resize(imgs,(h,w))).to(device)
     
     return imgs
 
@@ -165,7 +165,10 @@ def ddrm(
                 # if not os.path.exists(ckpt):
                 if not ckpt.exists():
                     ckpt.parent.mkdir(parents=True, exist_ok=True)
-                    download('https://image-editing-test-12345.s3-us-west-2.amazonaws.com/checkpoints/celeba_hq.ckpt', ckpt)
+                    ckpt_url = 'https://huggingface.co/gwang-kim/DiffusionCLIP-CelebA_HQ/resolve/main/celeba_hq.ckpt'
+                    # ckpt_url = 'https://image-editing-test-12345.s3-us-west-2.amazonaws.com/checkpoints/celeba_hq.ckpt'
+                    download(ckpt_url, ckpt)
+
             else:
                 raise ValueError
 

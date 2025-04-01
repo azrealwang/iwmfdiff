@@ -8,4 +8,9 @@ checkpoint
 face_eigen
 logs
 notSubmit
-
+tests/
+*.egg-info/
+*.egg
+src/*.egg-info/
+src/*.egg
+backup*
