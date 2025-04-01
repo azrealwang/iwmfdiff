@@ -115,22 +115,29 @@ The image name must satisfy `00000_0.jpg`. `00000` and `_0` indicates the image 
 Sometimes, the download speed of denoising diffusion models is very slow. Then, please manually download the pretrained model from [Google Drive](https://drive.google.com/file/d/1LeawZE7MKtrr0l-4_UOufiMykORy_MA1/view?usp=share_link) and prepare it as the path `exp/logs/celeba/celeba_hq.ckpt`.
 
 ## Usage
+
+After installing the package (e.g., `pip install -e .`), you can use the provided command-line tools to perform attacks, purifications, and evaluations. These tools are available as console scripts, allowing you to run `iwmf-attack`, `iwmf-defense`, and `iwmf-eval` directly instead of invoking python with the script paths.
+
 ### Regular attack
 ```
-python attack.py --attack APGD --norm Linf --eps 0.03 --model insightface --thres 0.6351
+iwmf-attack --attack APGD --norm Linf --eps 0.03 --model insightface --thres 0.6351
 ```
+_(Previously: `python attack.py ...`)_
 ### Purify adversarial examples
 ```
-python defense.py --lambda_0 0.25 --sigma_y 0.15 --folder APGD-Linf-0.03-insightface-0.6351 --input imgs/adv --eval_adv --model insightface --thres 0.6351
+iwmf-defense --lambda_0 0.25 --sigma_y 0.15 --folder APGD-Linf-0.03-insightface-0.6351 --input imgs/adv --eval_adv --model insightface --thres 0.6351
 ```
-### Purify genuie images
+_(Previously: `python defense.py ...`)_
+### Purify genuine images
 ```
-python defense.py --lambda_0 0.25 --sigma_y 0.15 --folder target --input imgs --eval_genuine --model insightface --thres 0.6351
+iwmf-defense --lambda_0 0.25 --sigma_y 0.15 --folder target --input imgs --eval_genuine --model insightface --thres 0.6351
 ```
+(Previously: `python defense.py ...`)_
 ### Adaptive attack
 ```
-python attack.py --attack Adaptive --norm Linf --eps 0.03 --defense 0.25 0.15 --model insightface --thres 0.6351
+iwmf-attack --attack Adaptive --norm Linf --eps 0.03 --defense 0.25 0.15 --model insightface --thres 0.6351
 ```
+_(Previously: `python attack.py ...`)_
 where the following are partial options:
 - `--model` allows `facenet` or `insightface`
 - `--attack` allows `APGD` (white-box attack), `APGD_EOT` (adaptive attack), `Square` (black-box attack), or `Adaptive` (strong adaptive)
@@ -139,9 +146,13 @@ where the following are partial options:
 
 Other options refer to `--help`
 
+#### Notes
+
+* __Console Scripts__: The commands `iwmf-attack`, `iwmf-defense`, and `iwmf-eval` are provided via the `[project.scripts]` section in `pyproject.toml`. This simplifies usage by eliminating the need to prepend `python` and specify script paths. Ensure the package is installed (`pip install -e .`) to use these commands.
+
 ### Import for pre-processing
 ```
-from fuctions.defense import iwmfdiff
+from functions.defense import iwmfdiff
 ```
 ```
 def iwmfdiff(
