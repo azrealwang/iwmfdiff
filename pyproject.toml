@@ -5,8 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "iwmfdiff"
 version = "0.1.0"
-description = "A package for image processing with diffusion models"
+description = "This package provides the implementation of the paper 'Iterative Window Mean Filter: Thwarting Diffusion-based Adversarial Purification'."
 authors = [{name = "Hanrui Wang"}]
+author_email = "hanrui_wang@nii.ac.jp"
 requires-python = ">=3.9"
 dependencies = [
     "numpy<2",
@@ -19,7 +20,7 @@ dependencies = [
 urls = {Homepage = "https://github.com/azrealwang/iwmfdiff"}
 
 [tool.setuptools]
-packages = {find = {where = ["src"], exclude = ["scripts"]}}
+packages = {find = {where = ["src"]}}
 package-data = {"iwmfdiff" = ["configs/*.yml"]}
 
 [project.optional-dependencies]
