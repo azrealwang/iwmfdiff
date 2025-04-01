@@ -6,8 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "iwmfdiff"
 version = "0.1.0"
 description = "This package provides the implementation of the paper 'Iterative Window Mean Filter: Thwarting Diffusion-based Adversarial Purification'."
-authors = [{name = "Hanrui Wang"}]
-author_email = "hanrui_wang@nii.ac.jp"
+authors = [{name = "Hanrui Wang", email = "hanrui_wang@nii.ac.jp"}]
 requires-python = ">=3.9"
 dependencies = [
     "numpy<2",
@@ -15,9 +14,15 @@ dependencies = [
     "torchvision==0.16.2",
     "PyYAML==6.0.1",
     "tqdm==4.66.2",
-    "facenet-pytorch==2.5.3"
+    "facenet-pytorch==2.5.3",
+    "requests"
 ]
 urls = {Homepage = "https://github.com/azrealwang/iwmfdiff"}
+
+[project.scripts]
+iwmf-attack = "iwmfdiff.scripts.attack:main"
+iwmf-defense = "iwmfdiff.scripts.defense:main"
+iwmf-eval = "iwmfdiff.scripts.evaluation:main"
 
 [tool.setuptools]
 packages = {find = {where = ["src"]}}

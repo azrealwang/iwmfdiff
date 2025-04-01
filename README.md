@@ -75,13 +75,13 @@ cd iwmfdiff
 
 ```bash
 pip install torch==2.1.2+cu118 torchvision==0.16.2+cu118 -f https://download.pytorch.org/whl/torch_stable.html
-pip install - e.
+pip install -e .
 ```
 
 * For CPU Only:
 
 ```bash
-pip install - e.
+pip install -e .
 ```
 
 #### Step 3: Verify Installation
