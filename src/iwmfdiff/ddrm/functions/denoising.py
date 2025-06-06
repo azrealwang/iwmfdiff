@@ -52,7 +52,7 @@ def compute_alpha(beta, t):
     a = (1 - beta).cumprod(dim=0).index_select(0, t + 1).view(-1, 1, 1, 1)
     return a
 
-def efficient_generalized_steps(x, seq, model, b, H_funcs, y_0, sigma_0, etaB, etaA, etaC, cls_fn=None, classes=None):
+def efficient_generalized_steps(x, seq, model, b, H_funcs, y_0, sigma_0, etaB, etaA, etaC, cls_fn=None, classes=None, verbose=False):
     with torch.no_grad():
         #setup vectors used in the algorithm
         singulars = H_funcs.singulars()
@@ -88,7 +88,9 @@ def efficient_generalized_steps(x, seq, model, b, H_funcs, y_0, sigma_0, etaB, e
         #xs = [x]
 
         #iterate over the timesteps
-        for i, j in tqdm(zip(reversed(seq), reversed(seq_next))):
+        # tqdm used only when `verbose` is True
+        for i, j in tqdm(zip(reversed(seq), reversed(seq_next)), disable=not verbose):
+        # for i, j in tqdm(zip(reversed(seq), reversed(seq_next))):
             t = (torch.ones(n) * i).to(x.device)
             next_t = (torch.ones(n) * j).to(x.device)
             at = compute_alpha(b, t.long())

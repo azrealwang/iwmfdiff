@@ -15,8 +15,8 @@ import time
 import math
 import torch.nn.functional as F
 
-from autoattack.autopgd_base import L1_projection
-from functions.utils import cos_similarity_score
+from .autopgd_base import L1_projection
+from iwmfdiff.utils import cos_similarity_score
 
 class SquareAttack():
     """
