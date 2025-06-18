@@ -128,7 +128,6 @@ If the downloading is slow, please manually download the pretrained model from [
 | Defense | FRR-Genuie | FAR-APGD | FAR-APGD_EOT | FAR-Square | FAR-Adaptive | Time Cost (s) |
 |:---:|:----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 | Insightface | 0.28 | 100 | 100 | 100 | N/A | N/A |
-| DiffPure | 5.00 | 17.4 | 17.6 | 20.4 | 99.4 | 3.41 |
 | IWMF | 6.36 | 9.2 | 7.6 | 28.8 | 80.4 | 0.36 |
 | IWMF-Diff | 3.22 | 6.6 | 5.0 | 19.8 | 77.4 | 3.79 |
 
