@@ -1,7 +1,16 @@
 .DS_Store
-__pycache__/
+# __pycache__/
+**__pycache__/
+.mypy_cache/
 exp
+**exp/
 checkpoint
 face_eigen
 logs
 notSubmit
+tests/
+*.egg-info/
+*.egg
+src/*.egg-info/
+src/*.egg
+backup*

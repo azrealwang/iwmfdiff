@@ -3,12 +3,13 @@ import time
 import torch
 from math import ceil
 from torch import Tensor
-from functions.insightface.iresnet import iresnet100
+from ..autoattack_fr.autopgd_base import APGDAttack
+from ..autoattack_fr.square import SquareAttack
+from iwmfdiff.insightface.iresnet import iresnet100
 from facenet_pytorch import InceptionResnetV1
-from functions.utils import save_all_images, load_samples, predict
-from evaluation import evaluate
-from autoattack_fr.autopgd_base import APGDAttack
-from autoattack_fr.square import SquareAttack
+from iwmfdiff.utils import save_all_images, load_samples, predict
+from iwmfdiff.scripts.evaluation import evaluate
+
 
 
 def parse_args_and_config():

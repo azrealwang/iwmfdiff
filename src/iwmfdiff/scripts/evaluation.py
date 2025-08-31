@@ -1,9 +1,9 @@
 import argparse
 import torch
 from torch import Tensor
-from functions.insightface.iresnet import iresnet100
+from iwmfdiff.insightface.iresnet import iresnet100
 from facenet_pytorch import InceptionResnetV1
-from functions.utils import false_rate, FMR, load_samples, predict
+from iwmfdiff.utils import false_rate, FMR, load_samples, predict
 
 
 def parse_args_and_config():
